@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
 
     :root {
       --color-primary: #1E293B;
@@ -24,83 +24,164 @@
       --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
       --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
       --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-      --font-heading: 'Poppins', sans-serif;
+      --font-heading: 'Open Sans', sans-serif;
       --font-body: 'Open Sans', sans-serif;
     }
 
     * {
       margin: 0;
       padding: 0;
+      box-shadow: none;
       box-sizing: border-box;
     }
 
     html {
       touch-action: manipulation;
+      font-family: var(--font-body);
+    }
+
+    body,
+    button,
+    input,
+    select,
+    textarea,
+    dialog {
+      font-family: var(--font-body);
     }
 
     body {
-      font-family: var(--font-body);
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       min-height: 100vh;
       margin: 0;
       background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 50%, #e8f5e8 100%);
-      padding: 20px;
+      padding: 12px 16px 28px;
     }
 
     .container {
       position: relative;
       background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(10px);
-      padding: 40px;
-      border-radius: 24px;
+      padding: 16px 18px 20px;
+      border-radius: 18px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.2);
-      max-width: 1100px;
+      max-width: 720px;
       width: 100%;
       animation: fadeInUp 0.6s ease-out;
     }
 
-    .theme-toggle {
+    .toolbar {
       position: absolute;
-      top: 22px;
-      right: 22px;
-      width: 48px;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      gap: 8px;
+      z-index: 2;
+    }
+
+    .icon-btn,
+    .theme-toggle,
+    .lang-toggle {
+      width: 40px;
       height: 36px;
       border-radius: 10px;
       border: 1px solid rgba(160, 170, 180, 0.45);
       background: rgba(255, 255, 255, 0.9);
       color: #2c3e50;
-      font-size: 18px;
+      font-size: 16px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       transition: all 0.2s ease;
       box-shadow: 0 4px 10px rgba(44, 62, 80, 0.12);
+      padding: 0;
     }
 
-    .theme-toggle:hover {
+    .icon-btn:hover,
+    .theme-toggle:hover,
+    .lang-toggle:hover {
       transform: translateY(-1px);
       box-shadow: 0 6px 14px rgba(44, 62, 80, 0.18);
     }
 
+    .lang-toggle {
+      width: auto;
+      min-width: 64px;
+      padding: 0 8px;
+      gap: 4px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .lang-toggle .lang-flag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 16px;
+      line-height: 0;
+      flex-shrink: 0;
+      overflow: visible;
+    }
+
+    .lang-toggle .lang-flag svg {
+      width: 24px;
+      height: 16px;
+      border-radius: 2px;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.18);
+    }
+
+    .lang-toggle .lang-flag svg.flag-vn {
+      display: inline-block;
+    }
+
+    .lang-toggle .lang-flag svg.flag-us {
+      display: none;
+    }
+
+    .lang-toggle.is-en .lang-flag svg.flag-vn {
+      display: none;
+    }
+
+    .lang-toggle.is-en .lang-flag svg.flag-us {
+      display: inline-block;
+    }
+
     .layout {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
+      grid-template-columns: 1fr;
+      gap: 16px;
       text-align: left;
-      align-items: stretch;
+      align-items: start;
     }
 
     .panel {
       background: rgba(255, 255, 255, 0.65);
       border: 1px solid rgba(200, 210, 220, 0.45);
-      border-radius: 20px;
-      padding: 20px;
-      height: 100%;
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    @media (min-width: 1100px) and (min-height: 900px) {
+      .container {
+        max-width: 1100px;
+      }
+
+      .layout {
+        grid-template-columns: 1fr 1fr;
+        align-items: stretch;
+      }
+
+      .panel {
+        height: 100%;
+      }
     }
 
     @keyframes fadeInUp {
@@ -119,37 +200,51 @@
       font-family: var(--font-heading);
       color: #2c3e50;
       font-weight: 600;
-      font-size: 28px;
-      margin-bottom: 30px;
+      font-size: 22px;
+      margin-bottom: 10px;
+      padding-right: 168px;
       letter-spacing: -0.5px;
-      text-align: center;
+      text-align: left;
     }
 
     h3 {
       font-family: var(--font-heading);
       color: #2c3e50;
-      font-size: 22px;
-      margin-bottom: 14px;
+      font-size: 18px;
+      margin-bottom: 10px;
     }
 
     .input-group {
       display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 8px;
+      margin-bottom: 10px;
       align-items: center;
       flex-wrap: wrap;
     }
 
+    .name-save-row {
+      display: flex;
+      gap: 8px;
+      align-items: stretch;
+      flex-wrap: nowrap;
+    }
+
+    .name-save-row #account-name {
+      flex: 1;
+      min-width: 0;
+    }
+
     input {
-      padding: 16px 20px;
+      padding: 10px 14px;
       font-size: 16px;
       border: 2px solid #e1e8ed;
-      border-radius: 16px;
+      border-radius: 12px;
       background: rgba(255, 255, 255, 0.8);
       transition: all 0.3s ease;
       font-family: inherit;
-      min-width: 300px;
+      min-width: 0;
       outline: none;
+      box-shadow: none;
     }
 
     input:focus {
@@ -160,17 +255,16 @@
 
     #secret {
       width: 100%;
-      min-width: 0;
     }
 
     button {
-      padding: 16px 24px;
+      padding: 12px 18px;
       background: linear-gradient(135deg, #81c784 0%, #66bb6a 100%);
       color: white;
       border: none;
-      border-radius: 16px;
+      border-radius: 12px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 500;
       font-family: inherit;
       transition: all 0.3s ease;
@@ -178,9 +272,9 @@
     }
 
     .action-btn {
-      width: 132px;
-      height: 52px;
-      padding: 0 16px;
+      min-width: 110px;
+      height: 44px;
+      padding: 0 14px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -191,8 +285,8 @@
     .generate-row {
       display: flex;
       justify-content: flex-start;
-      gap: 12px;
-      margin-top: 4px;
+      gap: 8px;
+      margin-top: 0;
       width: 100%;
     }
 
@@ -202,23 +296,16 @@
     }
 
     .list-manager {
-      margin: 8px 0 20px;
+      margin: 0 0 10px;
       display: grid;
-      gap: 12px;
-    }
-
-    .list-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      justify-content: center;
+      gap: 8px;
     }
 
     select {
-      padding: 14px 16px;
+      padding: 10px 14px;
       font-size: 15px;
       border: 2px solid #e1e8ed;
-      border-radius: 14px;
+      border-radius: 12px;
       background: rgba(255, 255, 255, 0.8);
       font-family: inherit;
       outline: none;
@@ -239,7 +326,7 @@
 
     .search-wrap {
       position: relative;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .search-wrap .search-input {
@@ -350,12 +437,14 @@
     .saved-item-actions {
       display: flex;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
     .saved-item-actions button {
       padding: 10px 12px;
       font-size: 13px;
       border-radius: 10px;
+      min-height: 40px;
     }
 
     .empty-list {
@@ -387,53 +476,43 @@
     }
 
     .otp-result {
-      margin: var(--space-lg) 0 var(--space-md);
+      margin: 10px 0 8px;
       display: grid;
-      gap: var(--space-sm);
+      gap: 4px;
+    }
+
+    .otp-card {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .otp-digits-wrap {
+      position: relative;
     }
 
     .otp-copy-hint {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      padding: 10px 14px;
-      border-radius: 999px;
+      display: block;
       font-family: var(--font-heading);
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 600;
-      letter-spacing: 0.02em;
       color: #166534;
-      background: linear-gradient(135deg, rgba(34, 197, 94, 0.18) 0%, rgba(34, 197, 94, 0.08) 100%);
-      border: 1px solid rgba(34, 197, 94, 0.45);
-      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.08), 0 6px 16px rgba(34, 197, 94, 0.12);
-      animation: hintPulse 2.4s ease-in-out infinite;
       text-align: center;
       user-select: none;
-    }
-
-    .otp-copy-hint i {
-      color: var(--color-cta);
-      font-size: 15px;
+      padding: 8px 0 0;
+      background: none;
+      border: none;
+      box-shadow: none;
+      animation: none;
     }
 
     .otp-copy-hint.is-copied {
       color: #14532d;
-      background: linear-gradient(135deg, rgba(34, 197, 94, 0.32) 0%, rgba(34, 197, 94, 0.16) 100%);
-      border-color: rgba(34, 197, 94, 0.7);
-      animation: none;
     }
 
-    @keyframes hintPulse {
-      0%, 100% {
-        box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.08), 0 6px 16px rgba(34, 197, 94, 0.12);
-        transform: translateY(0);
-      }
-      50% {
-        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.16), 0 8px 20px rgba(34, 197, 94, 0.2);
-        transform: translateY(-1px);
-      }
+    .otp-copy-hint i {
+      color: var(--color-cta);
+      font-size: 16px;
+      margin-right: 4px;
     }
 
     #otp {
@@ -444,12 +523,12 @@
       color: var(--color-primary);
       cursor: pointer;
       background: linear-gradient(180deg, rgba(34, 197, 94, 0.12) 0%, rgba(34, 197, 94, 0.06) 100%);
-      padding: 22px 16px;
-      min-height: 76px;
-      border-radius: 16px;
+      padding: 12px 48px 12px 12px;
+      min-height: 72px;
+      border-radius: 14px;
       border: 2px solid rgba(34, 197, 94, 0.35);
       transition: all 200ms ease;
-      letter-spacing: 0.28em;
+      letter-spacing: 0.18em;
       text-align: center;
       display: flex;
       align-items: center;
@@ -460,16 +539,12 @@
     }
 
     #otp:hover,
-    #otp:focus-visible {
+    #otp:focus-visible,
+    .otp-card:hover #otp {
       background: linear-gradient(180deg, rgba(34, 197, 94, 0.2) 0%, rgba(34, 197, 94, 0.1) 100%);
       border-color: rgba(34, 197, 94, 0.55);
-      transform: scale(1.015);
       outline: none;
       box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18), 0 10px 24px rgba(34, 197, 94, 0.18);
-    }
-
-    #otp:active {
-      transform: scale(0.985);
     }
 
     #otp.is-copied {
@@ -478,32 +553,151 @@
       box-shadow: 0 0 18px rgba(34, 197, 94, 0.35), 0 0 0 3px rgba(34, 197, 94, 0.2);
     }
 
+    .otp-copy-btn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      padding: 0;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #15803d;
+      box-shadow: 0 2px 8px rgba(34, 197, 94, 0.2);
+    }
+
+    .otp-copy-btn:hover {
+      transform: translateY(-50%);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+
+    .countdown-wrap {
+      margin-top: 6px;
+    }
+
+    #countdown {
+      margin-top: 0;
+      font-size: 14px;
+      color: #5a6c7d;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .otp-progress {
+      height: 4px;
+      margin-top: 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.08);
+      overflow: hidden;
+    }
+
+    .otp-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--color-cta);
+      border-radius: 999px;
+      transition: width 200ms linear;
+    }
+
+    .next-otp-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 8px;
+      min-height: 44px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(15, 23, 42, 0.1);
+      background: rgba(255, 255, 255, 0.55);
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .next-otp-row.is-hidden {
+      display: none;
+    }
+
+    .next-otp-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #64748b;
+      flex-shrink: 0;
+    }
+
+    #otp-next {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: #334155;
+      min-width: 0;
+      text-align: right;
+    }
+
+    .next-otp-row.is-near-expiry {
+      border-color: rgba(245, 158, 11, 0.55);
+      background: rgba(254, 243, 199, 0.7);
+    }
+
+    .next-otp-row.is-near-expiry .next-otp-label,
+    .next-otp-row.is-near-expiry #otp-next {
+      color: #b45309;
+    }
+
+    .near-expiry-hint {
+      margin-top: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #b45309;
+      text-align: center;
+      line-height: 1.35;
+    }
+
+    .near-expiry-hint.is-hidden {
+      display: none;
+    }
+
+    .storage-note a {
+      color: #1d4ed8;
+      font-weight: 700;
+      word-break: break-all;
+    }
+
     @media (prefers-reduced-motion: reduce) {
-      .otp-copy-hint {
+      .container {
         animation: none;
       }
 
       #otp,
       #otp:hover,
       #otp:focus-visible,
-      #otp:active {
+      .otp-card:hover #otp {
         transition: none;
         transform: none;
+      }
+
+      .otp-progress-bar {
+        transition: none;
       }
     }
 
     #global-message {
       color: #e57373;
       margin-top: 0;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
       max-width: 100%;
       word-wrap: break-word;
       background: rgba(229, 115, 115, 0.1);
-      padding: 12px 16px;
-      border-radius: 12px;
+      padding: 8px 12px;
+      border-radius: 10px;
       border: 1px solid rgba(229, 115, 115, 0.2);
       display: block;
-      font-weight: 900;
+      font-weight: 700;
+      font-size: 14px;
     }
 
     #global-message.success {
@@ -513,7 +707,7 @@
     }
 
     #global-message.info {
-      color: #fcd34d;
+      color: #b45309;
       background: rgba(255, 193, 7, 0.12);
       border-color: rgba(255, 193, 7, 0.35);
     }
@@ -522,41 +716,128 @@
       display: none;
     }
 
-    #countdown {
-      margin-top: 15px;
-      font-size: 16px;
-      color: #5a6c7d;
-      text-align: center;
-      font-weight: 500;
-    }
-
     .storage-note {
-      margin-top: 14px;
-      padding: 12px 14px;
-      border-radius: 12px;
+      margin: 0 0 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
       border: 1px solid rgba(255, 193, 7, 0.35);
       background: rgba(255, 248, 225, 0.9);
       color: #7a5b00;
       line-height: 1.5;
+      font-size: 15px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(12px);
+      z-index: 40;
+      max-width: min(92vw, 420px);
+      padding: 10px 16px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.94);
+      color: #f8fafc;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .help-dialog {
+      border: none;
+      border-radius: 16px;
+      padding: 0;
+      max-width: min(92vw, 480px);
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .help-dialog::backdrop {
+      background: rgba(15, 23, 42, 0.45);
+    }
+
+    .help-dialog .help-head,
+    .help-dialog .help-body,
+    .help-dialog .help-foot {
+      padding: 14px 18px;
+    }
+
+    .help-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .help-head h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .help-body ol {
+      padding-left: 18px;
+      display: grid;
+      gap: 8px;
+      color: #334155;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .help-body code {
+      font-size: 12px;
+      background: rgba(15, 23, 42, 0.06);
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+
+    .help-foot {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      padding: 0;
+      background: transparent;
+      color: #334155;
+      box-shadow: none;
+      font-size: 22px;
+    }
+
+    .modal-close:hover {
+      transform: none;
+      box-shadow: none;
+      background: rgba(15, 23, 42, 0.06);
     }
 
     @media (max-width: 600px) {
       .container {
-        padding: 30px 20px;
-        margin: 10px;
+        padding: 14px 12px 16px;
+        margin: 0;
       }
 
-      .theme-toggle {
-        top: 14px;
-        right: 14px;
-        width: 48px;
-        height: 36px;
+      .toolbar {
+        top: 10px;
+        right: 10px;
       }
 
       .layout {
         grid-template-columns: 1fr;
       }
 
+      .name-save-row,
       .input-group {
         flex-direction: column;
         align-items: stretch;
@@ -567,13 +848,10 @@
         width: 100%;
       }
 
-      .layout > .panel:first-child button {
-        width: 100%;
-      }
-
-      .layout > .panel:first-child .action-btn {
+      .panel-generator .action-btn {
         width: 100%;
         max-width: 100%;
+        min-height: 44px;
       }
 
       .generate-row {
@@ -583,35 +861,57 @@
 
       .generate-row .action-btn {
         flex: 1;
-        min-height: 48px;
-      }
-
-      .otp-result {
-        margin-top: 18px;
-      }
-
-      .otp-copy-hint {
-        font-size: 13px;
-        padding: 11px 12px;
-        border-radius: 14px;
-        line-height: 1.35;
+        min-height: 44px;
       }
 
       #otp {
-        min-height: 84px;
-        padding: 20px 12px;
-        letter-spacing: 0.22em;
-        font-size: clamp(30px, 10vw, 38px);
+        min-height: 72px;
+        padding: 12px 44px 12px 10px;
+        letter-spacing: 0.14em;
+        font-size: clamp(28px, 9vw, 38px);
+      }
+
+      .otp-copy-hint {
+        font-size: 16px;
       }
 
       .saved-item-actions {
-        justify-content: center;
+        justify-content: stretch;
       }
 
       .saved-item-actions button {
         width: auto;
         flex: 1;
         min-width: 0;
+      }
+    }
+
+    @media (max-height: 700px) {
+      body {
+        padding: 8px 12px 16px;
+      }
+
+      .container {
+        padding: 12px 14px 14px;
+      }
+
+      h2 {
+        font-size: 20px;
+        margin-bottom: 8px;
+      }
+
+      .panel {
+        padding: 12px;
+      }
+
+      #otp {
+        min-height: 64px;
+        padding: 10px 44px 10px 10px;
+      }
+
+      .storage-note {
+        font-size: 14px;
+        padding: 8px 10px;
       }
     }
 
@@ -662,21 +962,14 @@
 
     body.theme-dark .otp-copy-hint {
       color: #bbf7d0;
-      background: linear-gradient(135deg, rgba(34, 197, 94, 0.28) 0%, rgba(34, 197, 94, 0.12) 100%);
-      border-color: rgba(34, 197, 94, 0.55);
-      box-shadow: 0 0 12px rgba(34, 197, 94, 0.22), 0 0 0 1px rgba(34, 197, 94, 0.12);
-      text-shadow: 0 0 12px rgba(34, 197, 94, 0.35);
     }
 
     body.theme-dark .otp-copy-hint i {
       color: #4ade80;
-      filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.65));
     }
 
     body.theme-dark .otp-copy-hint.is-copied {
       color: #dcfce7;
-      background: linear-gradient(135deg, rgba(34, 197, 94, 0.4) 0%, rgba(34, 197, 94, 0.2) 100%);
-      border-color: rgba(74, 222, 128, 0.75);
     }
 
     body.theme-dark #otp {
@@ -688,7 +981,8 @@
     }
 
     body.theme-dark #otp:hover,
-    body.theme-dark #otp:focus-visible {
+    body.theme-dark #otp:focus-visible,
+    body.theme-dark .otp-card:hover #otp {
       border-color: rgba(74, 222, 128, 0.75);
       box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18), 0 0 28px rgba(34, 197, 94, 0.28);
     }
@@ -699,78 +993,209 @@
       box-shadow: 0 0 24px rgba(34, 197, 94, 0.45), 0 0 0 3px rgba(34, 197, 94, 0.25);
     }
 
+    body.theme-dark .otp-copy-btn {
+      background: rgba(15, 23, 42, 0.95);
+      color: #86efac;
+    }
+
+    body.theme-dark .otp-progress {
+      background: rgba(148, 163, 184, 0.2);
+    }
+
+    body.theme-dark .next-otp-row {
+      background: rgba(15, 23, 42, 0.75);
+      border-color: rgba(71, 85, 105, 0.55);
+    }
+
+    body.theme-dark .next-otp-label {
+      color: #94a3b8;
+    }
+
+    body.theme-dark #otp-next {
+      color: #e2e8f0;
+    }
+
+    body.theme-dark .next-otp-row.is-near-expiry {
+      border-color: rgba(251, 191, 36, 0.55);
+      background: rgba(120, 53, 15, 0.35);
+    }
+
+    body.theme-dark .next-otp-row.is-near-expiry .next-otp-label,
+    body.theme-dark .next-otp-row.is-near-expiry #otp-next {
+      color: #fcd34d;
+    }
+
+    body.theme-dark .near-expiry-hint {
+      color: #fbbf24;
+    }
+
+    body.theme-dark .storage-note a {
+      color: #93c5fd;
+    }
+
+    body.theme-dark .lang-toggle {
+      background: rgba(31, 41, 55, 0.95);
+      border-color: rgba(75, 85, 99, 0.7);
+      color: #f3f4f6;
+    }
+
     body.theme-dark .storage-note {
       background: rgba(120, 53, 15, 0.22);
       border-color: rgba(245, 158, 11, 0.4);
       color: #fcd34d;
     }
 
-    body.theme-dark .theme-toggle {
+    body.theme-dark .icon-btn,
+    body.theme-dark .theme-toggle,
+    body.theme-dark .lang-toggle {
       background: rgba(31, 41, 55, 0.95);
       border-color: rgba(75, 85, 99, 0.7);
       color: #f3f4f6;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+    }
+
+    body.theme-dark .toast {
+      background: rgba(226, 232, 240, 0.96);
+      color: #0f172a;
+    }
+
+    body.theme-dark .help-dialog {
+      background: #111827;
+      color: #e5e7eb;
+    }
+
+    body.theme-dark .help-body ol {
+      color: #cbd5e1;
+    }
+
+    body.theme-dark .help-body code {
+      background: rgba(148, 163, 184, 0.16);
+    }
+
+    body.theme-dark .modal-close {
+      color: #e5e7eb;
+    }
+
+    body.theme-dark .help-head {
+      border-color: rgba(71, 85, 105, 0.55);
     }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <button id="theme-toggle" class="theme-toggle" type="button" onclick="toggleTheme()" title="Chuyển dark/light mode" aria-label="Chuyển dark/light mode">🌙</button>
-    <h2>Nhập mã 2FA</h2>
+    <div class="toolbar">
+      <button id="help-toggle" class="icon-btn" type="button" onclick="openHelp()" data-i18n-title="a11y.help" data-i18n-aria="a11y.help" title="Hướng dẫn" aria-label="Hướng dẫn">?</button>
+      <button id="lang-toggle" class="lang-toggle" type="button" onclick="toggleLanguage()" title="Ngôn ngữ: Tiếng Việt. Nhấn để chuyển sang English." aria-label="Ngôn ngữ: Tiếng Việt. Nhấn để chuyển sang English.">
+        <span class="lang-flag" aria-hidden="true">
+          <svg class="flag-vn" viewBox="0 0 30 20" xmlns="http://www.w3.org/2000/svg" focusable="false">
+            <rect width="30" height="20" fill="#DA251D"/>
+            <polygon fill="#FF0" points="15,3.2 16.9,9 23.1,9 18.1,12.6 20,18.4 15,14.8 10,18.4 11.9,12.6 6.9,9 13.1,9"/>
+          </svg>
+          <svg class="flag-us" viewBox="0 0 19 10" xmlns="http://www.w3.org/2000/svg" focusable="false">
+            <rect width="19" height="10" fill="#BF0A30"/>
+            <path fill="#FFF" d="M0 0.77h19v0.77H0zm0 1.54h19v0.77H0zm0 1.54h19v0.77H0zm0 1.54h19v0.77H0zm0 1.54h19v0.77H0zm0 1.54h19v0.77H0z"/>
+            <rect width="7.6" height="5.38" fill="#002868"/>
+            <g fill="#FFF">
+              <circle cx="1.1" cy="0.9" r="0.28"/><circle cx="2.5" cy="0.9" r="0.28"/><circle cx="3.9" cy="0.9" r="0.28"/><circle cx="5.3" cy="0.9" r="0.28"/><circle cx="6.7" cy="0.9" r="0.28"/>
+              <circle cx="1.8" cy="1.7" r="0.28"/><circle cx="3.2" cy="1.7" r="0.28"/><circle cx="4.6" cy="1.7" r="0.28"/><circle cx="6.0" cy="1.7" r="0.28"/>
+              <circle cx="1.1" cy="2.5" r="0.28"/><circle cx="2.5" cy="2.5" r="0.28"/><circle cx="3.9" cy="2.5" r="0.28"/><circle cx="5.3" cy="2.5" r="0.28"/><circle cx="6.7" cy="2.5" r="0.28"/>
+              <circle cx="1.8" cy="3.3" r="0.28"/><circle cx="3.2" cy="3.3" r="0.28"/><circle cx="4.6" cy="3.3" r="0.28"/><circle cx="6.0" cy="3.3" r="0.28"/>
+              <circle cx="1.1" cy="4.1" r="0.28"/><circle cx="2.5" cy="4.1" r="0.28"/><circle cx="3.9" cy="4.1" r="0.28"/><circle cx="5.3" cy="4.1" r="0.28"/><circle cx="6.7" cy="4.1" r="0.28"/>
+            </g>
+          </svg>
+        </span>
+        <span id="lang-toggle-code">VI</span>
+      </button>
+      <button id="theme-toggle" class="theme-toggle" type="button" onclick="toggleTheme()" data-i18n-title="a11y.themeToDark" data-i18n-aria="a11y.themeToDark" title="Chuyển dark/light mode" aria-label="Chuyển dark/light mode">🌙</button>
+    </div>
+    <h2 data-i18n="title">Nhập mã 2FA</h2>
     <div id="global-message"></div>
     <div class="layout">
-      <div class="panel">
+      <div class="panel panel-generator">
         <div class="input-group">
-          <input type="text" id="secret" autocomplete="one-time-code" placeholder="Nhập mã 2FA (qw6y x2dl...)" oninput="handleSecretInput()">
+          <input type="text" id="secret" autocomplete="one-time-code" autofocus data-i18n-placeholder="placeholder.secret" placeholder="email|password|secret hoặc chỉ secret (qw6y x2dl...)" oninput="handleSecretInput()">
         </div>
         <div class="list-manager">
-          <div class="input-group">
-            <input type="text" id="account-name" placeholder="Tên tài khoản (vd: vietnam2026)">
-            <button class="action-btn" onclick="saveCurrentSecret()">
-              <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>Lưu mã
+          <div class="input-group name-save-row">
+            <input type="text" id="account-name" data-i18n-placeholder="placeholder.accountName" placeholder="Tên tài khoản (vd: vietnam2026)">
+            <button class="action-btn" type="button" onclick="saveCurrentSecret()">
+              <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i><span data-i18n="btn.save">Lưu mã</span>
             </button>
           </div>
         </div>
         <div class="generate-row">
-          <button class="action-btn" onclick="generateOTP()">
-            <i class="fa-solid fa-key" aria-hidden="true"></i>Tạo OTP
+          <button class="action-btn" type="button" onclick="generateOTP()">
+            <i class="fa-solid fa-key" aria-hidden="true"></i><span data-i18n="btn.generate">Tạo OTP</span>
           </button>
-          <button class="copy-link-btn action-btn" onclick="copyCurrentLink()">
-            <i class="fa-solid fa-link" aria-hidden="true"></i>Copy Link
+          <button class="copy-link-btn action-btn" type="button" onclick="copyCurrentLink()">
+            <i class="fa-solid fa-link" aria-hidden="true"></i><span data-i18n="btn.copyLink">Copy Link</span>
           </button>
         </div>
         <div class="otp-result">
-          <div class="otp-copy-hint" id="otp-copy-hint" aria-hidden="true">
-            <i class="fa-regular fa-hand-pointer" aria-hidden="true"></i>
-            <span>Nhấn vào số để copy</span>
+          <div class="otp-card" id="otp-card" onclick="copyOTP()">
+            <div class="otp-digits-wrap">
+              <div
+                id="otp"
+                data-otp=""
+                role="button"
+                tabindex="0"
+                onclick="event.stopPropagation(); copyOTP();"
+                onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();copyOTP();}"
+                data-i18n-title="a11y.copyCurrent"
+                data-i18n-aria="a11y.copyCurrent"
+                title="Nhấn vào số để copy"
+                aria-label="Mã OTP, nhấn vào số để copy"
+              >Chưa tạo</div>
+              <button class="otp-copy-btn" type="button" onclick="event.stopPropagation(); copyOTP();" data-i18n-title="a11y.copyCurrentBtn" data-i18n-aria="a11y.copyCurrentBtn" title="Copy OTP" aria-label="Copy OTP">
+                <i class="fa-regular fa-copy" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div class="otp-copy-hint" id="otp-copy-hint" aria-hidden="true">
+              <i class="fa-regular fa-hand-pointer" aria-hidden="true"></i>
+              <span data-i18n="clickToCopy">Nhấn vào số để copy</span>
+            </div>
+          </div>
+        </div>
+        <div class="countdown-wrap">
+          <div id="countdown"></div>
+          <div class="otp-progress" aria-hidden="true">
+            <div id="otp-progress-bar" class="otp-progress-bar"></div>
           </div>
           <div
-            id="otp"
+            id="next-otp-row"
+            class="next-otp-row is-hidden"
             role="button"
             tabindex="0"
-            onclick="copyOTP()"
-            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();copyOTP();}"
-            title="Nhấn để copy mã OTP"
-            aria-label="Mã OTP, nhấn để copy"
-          ></div>
-        </div>
-        <div id="countdown"></div>
-        <div class="storage-note">
-          <strong>Lưu ý:</strong> Danh sách mã 2FA chỉ được lưu cục bộ trong trình duyệt của bạn, không gửi đến, không lưu trên server của chúng tôi. Nếu bạn xóa cache trình duyệt, gỡ hoặc cài lại trình duyệt, hoặc cài lại máy, danh sách đã lưu sẽ bị mất.
+            onclick="event.stopPropagation(); copyNextOtp();"
+            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();copyNextOtp();}"
+            data-i18n-title="a11y.copyNext"
+            data-i18n-aria="a11y.copyNext"
+            title="Copy mã OTP tiếp theo"
+            aria-label="Copy mã OTP tiếp theo"
+          >
+            <span class="next-otp-label" data-i18n="nextLabel">Tiếp theo</span>
+            <span id="otp-next" data-otp-next=""></span>
+          </div>
+          <p id="near-expiry-hint" class="near-expiry-hint is-hidden" data-i18n="hint.nearExpiry">Mã hiện tại sắp hết hạn. Bạn nên copy mã tiếp theo để dán vào ô xác thực cho kịp thời gian.</p>
         </div>
       </div>
-      <div class="panel">
-        <h3>Danh sách đã lưu</h3>
+      <div class="panel panel-vault">
+        <div class="storage-note" id="storage-note">
+          <strong data-i18n="privacy.strong">Lưu ý:</strong>
+          <span data-i18n-html="privacy.body"></span>
+        </div>
+        <h3 data-i18n="savedHeading">Danh sách đã lưu</h3>
         <div class="search-wrap">
           <input
             type="text"
             id="search-saved"
             class="search-input"
+            data-i18n-placeholder="placeholder.search"
             placeholder="Tìm theo tên mã đã lưu..."
             oninput="renderSavedSecrets()"
           >
-          <button id="clear-search-btn" type="button" class="clear-search-btn hidden" onclick="clearSavedSearch()" title="Xóa từ khóa tìm kiếm" aria-label="Xóa từ khóa tìm kiếm">
+          <button id="clear-search-btn" type="button" class="clear-search-btn hidden" onclick="clearSavedSearch()" data-i18n-title="a11y.clearSearch" data-i18n-aria="a11y.clearSearch" title="Xóa từ khóa tìm kiếm" aria-label="Xóa từ khóa tìm kiếm">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
@@ -779,7 +1204,45 @@
     </div>
   </div>
 
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <dialog id="help-dialog" class="help-dialog" aria-labelledby="help-title">
+    <div class="help-head">
+      <h3 id="help-title" data-i18n="help.title">Hướng dẫn nhanh</h3>
+      <button type="button" class="modal-close" onclick="closeHelp()" data-i18n-aria="btn.close" aria-label="Đóng">×</button>
+    </div>
+    <div class="help-body">
+      <ol>
+        <li data-i18n-html="help.1"></li>
+        <li data-i18n-html="help.2"></li>
+        <li data-i18n-html="help.3"></li>
+        <li data-i18n-html="help.4"></li>
+        <li data-i18n-html="help.5"></li>
+        <li data-i18n-html="help.6"></li>
+        <li data-i18n-html="help.7"></li>
+      </ol>
+    </div>
+    <div class="help-foot">
+      <button type="button" class="action-btn" onclick="closeHelp()" data-i18n="btn.close">Đóng</button>
+    </div>
+  </dialog>
+
   <script>
+    var TOTP_PERIOD = 30;
+    var TOTP_DIGITS = 6;
+    var NEAR_EXPIRY_SECONDS = 5;
+
+    function getNowMs() {
+      if (typeof window !== 'undefined' && typeof window.__TWOFA_NOW__ === 'number') {
+        return window.__TWOFA_NOW__;
+      }
+      return Date.now();
+    }
+
+    function getEpochSec() {
+      return Math.floor(getNowMs() / 1000);
+    }
+
     // Nhúng otplib trực tiếp (rút gọn từ @otplib/core và @otplib/preset-browser v12.0.1)
     (function () {
       window.otplib = window.otplib || {};
@@ -812,13 +1275,11 @@
         return new Uint8Array(buf);
       }
       otplib.authenticator = {
-        generate(secret) {
-          const epoch = Math.floor(Date.now() / 1000);
-          const timeStep = 30;
-          const counter = Math.floor(epoch / timeStep);
+        generateAtCounter: function (secret, counter) {
           const key = base32Decode(secret);
           const msg = uintToBuf(counter);
-          return hmacSha1(key, msg).then(sig => {
+          const mod = Math.pow(10, TOTP_DIGITS);
+          return hmacSha1(key, msg).then(function (sig) {
             const buffer = new Uint8Array(sig);
             const offset = buffer[buffer.length - 1] & 0x0f;
             const bin = (
@@ -827,15 +1288,233 @@
               ((buffer[offset + 2] & 0xff) << 8) |
               (buffer[offset + 3] & 0xff)
             );
-            const code = bin % 1000000;
-            return code.toString().padStart(6, '0');
+            const code = (bin >>> 0) % mod;
+            return code.toString().padStart(TOTP_DIGITS, '0');
           });
+        },
+        generate: function (secret) {
+          const counter = Math.floor(getEpochSec() / TOTP_PERIOD);
+          return otplib.authenticator.generateAtCounter(secret, counter);
         }
       };
     })();
 
+    var LANG_KEY = 'twofa.lang.v1';
+    var currentLang = 'vi';
+    var I18N = {
+      vi: {
+        docTitle: 'Tạo mã OTP từ 2FA',
+        title: 'Nhập mã 2FA',
+        'placeholder.secret': 'email|password|secret hoặc chỉ secret (qw6y x2dl...)',
+        'placeholder.accountName': 'Tên tài khoản (vd: vietnam2026)',
+        'placeholder.search': 'Tìm theo tên mã đã lưu...',
+        'btn.save': 'Lưu mã',
+        'btn.generate': 'Tạo OTP',
+        'btn.copyLink': 'Copy Link',
+        'btn.otp': 'OTP',
+        'btn.use': 'Dùng mã',
+        'btn.delete': 'Xóa',
+        'btn.close': 'Đóng',
+        clickToCopy: 'Nhấn vào số để copy',
+        copiedHint: 'Đã Copy!',
+        otpPending: 'Chưa tạo',
+        countdown: 'Còn {seconds} giây',
+        nextLabel: 'Tiếp theo',
+        'toast.copyCurrent': 'Đã copy OTP: {otp}',
+        'toast.copyNext': 'Đã copy mã OTP tiếp theo: {otp}',
+        'toast.nearExpiry': ' — mã sắp hết hạn',
+        'hint.nearExpiry': 'Mã hiện tại sắp hết hạn. Bạn nên copy mã tiếp theo để dán vào ô xác thực cho kịp thời gian.',
+        'toast.copyLink': 'Đã copy link tạo mã OTP.',
+        'toast.saved': 'Đã lưu mã 2FA vào danh sách.',
+        'toast.deleted': 'Đã xóa mã 2FA đã lưu.',
+        'toast.pasted': 'Đã nhận secret từ dòng dán.',
+        'toast.fromLink': 'Đã tự động tạo OTP từ liên kết.',
+        'confirm.delete': 'Xóa mã đã lưu "{name}"?',
+        'empty.none': 'Chưa có mã 2FA nào được lưu.',
+        'empty.noMatch': 'Không có mã nào khớp tìm kiếm.',
+        savedHeading: 'Danh sách đã lưu',
+        'privacy.strong': 'Lưu ý:',
+        'privacy.body': 'danh sách mã 2FA được lưu cục bộ trên trình duyệt này (<code>localStorage</code>) và mã OTP được tạo ngay trên máy bạn. Website không gửi secret 2FA hay tên tài khoản lên server của chúng tôi. Xóa dữ liệu/cache hoặc cài lại trình duyệt có thể làm mất danh sách. Mã nguồn mở các bạn có thể kiểm tra code để yên tâm sử dụng: <a href="https://github.com/BinLate/2fa" target="_blank" rel="noopener noreferrer">GitHub</a>',
+        'help.title': 'Hướng dẫn nhanh',
+        'help.1': 'Secret 2FA là khóa Base32 (A–Z, 2–7) dùng để tạo mã OTP 6 số tại máy bạn.',
+        'help.2': 'Dán secret, hoặc cả dòng <code>email|password|secret</code> (tab hoặc dấu phẩy cũng được). Thêm mã đơn ở cuối vẫn nhận. Dấu <code>-</code> trong secret chỉ để dễ đọc, không dùng để tách cột.',
+        'help.3': 'Bấm <strong>Tạo OTP</strong> hoặc dán xong sẽ tự tạo mã.',
+        'help.4': 'Bấm vào số OTP hiện tại, cả thẻ, icon copy, hoặc dòng <strong>Tiếp theo</strong>. Clipboard luôn là 6 số dính liền.',
+        'help.5': 'Khi mã hiện tại chỉ còn vài giây, hãy copy mã OTP tiếp theo để tránh hết hạn lúc chuyển sang tab đăng nhập.',
+        'help.6': 'Danh sách đã lưu nằm trong trình duyệt này (<code>localStorage</code> plaintext), không gửi lên server của chúng tôi.',
+        'help.7': 'Không chia sẻ secret 2FA hay link chứa secret.',
+        'a11y.help': 'Hướng dẫn',
+        'a11y.themeToDark': 'Chuyển sang Dark mode',
+        'a11y.themeToLight': 'Chuyển sang Light mode',
+        'a11y.langToEn': 'Ngôn ngữ: Tiếng Việt. Nhấn để chuyển sang English.',
+        'a11y.langToVi': 'Language: English. Click to switch to Vietnamese.',
+        'a11y.copyCurrent': 'Mã OTP hiện tại, nhấn để copy',
+        'a11y.copyCurrentBtn': 'Copy OTP hiện tại',
+        'a11y.copyNext': 'Mã OTP tiếp theo, nhấn để copy',
+        'a11y.clearSearch': 'Xóa từ khóa tìm kiếm',
+        'error.clipboard': 'Không thể sao chép tự động. Hãy kiểm tra quyền clipboard của trình duyệt hoặc sao chép thủ công.',
+        'error.copyLinkNeedSecret': 'Vui lòng nhập mã 2FA trước khi copy link.',
+        'error.copyLinkFail': 'Lỗi khi copy link. Vui lòng thử lại.',
+        'error.saveName': 'Vui lòng nhập tên tài khoản trước khi lưu.',
+        'error.saveSecret': 'Mã 2FA không hợp lệ nên chưa thể lưu.',
+        'error.saveDuplicate': 'Tên mã này đã tồn tại, vui lòng chọn tên khác.',
+        'error.saveStorage': 'Không thể lưu danh sách 2FA trên trình duyệt này.',
+        'error.extract': 'Không nhận ra secret 2FA hợp lệ. Hãy dán secret hoặc dòng email|password|secret.',
+        'error.emptySecret': 'Vui lòng nhập mã bí mật!',
+        'error.invalidBase32': 'Mã bí mật không đúng định dạng Base32 (chỉ dùng A-Z, 2-7)!',
+        'error.otplib': 'Lỗi: Thư viện OTP không khả dụng!',
+        'error.generate': 'Lỗi khi tạo OTP: {error}'
+      },
+      en: {
+        docTitle: 'Generate OTP from 2FA',
+        title: 'Enter 2FA secret',
+        'placeholder.secret': 'email|password|secret or secret only (qw6y x2dl...)',
+        'placeholder.accountName': 'Account name (e.g. vietnam2026)',
+        'placeholder.search': 'Search saved accounts...',
+        'btn.save': 'Save',
+        'btn.generate': 'Generate OTP',
+        'btn.copyLink': 'Copy Link',
+        'btn.otp': 'OTP',
+        'btn.use': 'Use',
+        'btn.delete': 'Delete',
+        'btn.close': 'Close',
+        clickToCopy: 'Click the number to copy',
+        copiedHint: 'Copied!',
+        otpPending: 'Not generated',
+        countdown: '{seconds} seconds remaining',
+        nextLabel: 'Next',
+        'toast.copyCurrent': 'OTP copied: {otp}',
+        'toast.copyNext': 'Next OTP copied: {otp}',
+        'toast.nearExpiry': ' — code is about to expire',
+        'hint.nearExpiry': 'The current code is about to expire. You should copy the next code and paste it into the verification field in time.',
+        'toast.copyLink': 'OTP link copied.',
+        'toast.saved': '2FA code saved to the list.',
+        'toast.deleted': 'Saved 2FA code deleted.',
+        'toast.pasted': 'Secret detected from pasted text.',
+        'toast.fromLink': 'OTP generated from the link.',
+        'confirm.delete': 'Delete saved code "{name}"?',
+        'empty.none': 'No saved 2FA codes yet.',
+        'empty.noMatch': 'No codes match the search.',
+        savedHeading: 'Saved accounts',
+        'privacy.strong': 'Note:',
+        'privacy.body': 'Saved 2FA accounts stay in this browser (<code>localStorage</code>). OTP codes are generated on your device. This site’s code does not upload your 2FA secrets or account names to our server. Clearing site data/cache or reinstalling the browser can delete the list. Open source: <a href="https://github.com/BinLate/2fa" target="_blank" rel="noopener noreferrer">GitHub</a>. The page still loads third-party font/icon CDNs (they see your IP, not your secret). “Copy Link” includes the secret — do not share it publicly.',
+        'help.title': 'Quick guide',
+        'help.1': 'A 2FA secret is a Base32 key (A–Z, 2–7) used to generate a 6-digit OTP on your device.',
+        'help.2': 'Paste the secret, or a full line <code>email|password|secret</code> (tab or comma also work). Extra fields at the end are ignored. A hyphen <code>-</code> inside the secret is only grouping, not a column separator.',
+        'help.3': 'Click <strong>Generate OTP</strong> or paste to generate automatically.',
+        'help.4': 'Click the current digits, the card, the copy icon, or the <strong>Next</strong> row. The clipboard is always 6 digits with no spaces.',
+        'help.5': 'If the current code has only a few seconds left, copy the <strong>next</strong> OTP before switching to the login tab so it does not expire mid-submit.',
+        'help.6': 'The saved list stays in this browser (<code>localStorage</code>, plaintext) and is not uploaded to our server.',
+        'help.7': 'Do not share 2FA secrets or links that contain a secret.',
+        'a11y.help': 'Help',
+        'a11y.themeToDark': 'Switch to dark mode',
+        'a11y.themeToLight': 'Switch to light mode',
+        'a11y.langToEn': 'Language: Vietnamese. Click to switch to English.',
+        'a11y.langToVi': 'Language: English. Click to switch to Vietnamese.',
+        'a11y.copyCurrent': 'Current OTP, click to copy',
+        'a11y.copyCurrentBtn': 'Copy current OTP',
+        'a11y.copyNext': 'Next OTP, click to copy',
+        'a11y.clearSearch': 'Clear search',
+        'error.clipboard': 'Could not copy automatically. Check clipboard permission or copy manually.',
+        'error.copyLinkNeedSecret': 'Enter a 2FA secret before copying the link.',
+        'error.copyLinkFail': 'Could not copy the link. Please try again.',
+        'error.saveName': 'Enter an account name before saving.',
+        'error.saveSecret': 'The 2FA secret is invalid and cannot be saved.',
+        'error.saveDuplicate': 'That name already exists. Choose another name.',
+        'error.saveStorage': 'Could not save the 2FA list in this browser.',
+        'error.extract': 'No valid 2FA secret found. Paste a secret or email|password|secret.',
+        'error.emptySecret': 'Please enter the secret!',
+        'error.invalidBase32': 'Secret is not valid Base32 (use A–Z and 2–7 only)!',
+        'error.otplib': 'Error: OTP library is unavailable!',
+        'error.generate': 'Error generating OTP: {error}'
+      }
+    };
+
+    function t(key, vars) {
+      const pack = I18N[currentLang] || I18N.vi;
+      const fallback = I18N.en || {};
+      let text = pack[key] != null ? pack[key] : (fallback[key] != null ? fallback[key] : key);
+      if (vars) {
+        Object.keys(vars).forEach(function (name) {
+          text = String(text).split('{' + name + '}').join(String(vars[name]));
+        });
+      }
+      return text;
+    }
+
+    function applyTranslations() {
+      document.documentElement.lang = currentLang === 'en' ? 'en' : 'vi';
+      document.title = t('docTitle');
+      document.querySelectorAll('[data-i18n]').forEach(function (el) {
+        const hint = el.closest && el.closest('#otp-copy-hint');
+        if (hint && hint.classList.contains('is-copied')) {
+          el.textContent = t('copiedHint');
+          return;
+        }
+        el.textContent = t(el.getAttribute('data-i18n'));
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(function (el) {
+        el.setAttribute('placeholder', t(el.getAttribute('data-i18n-placeholder')));
+      });
+      document.querySelectorAll('[data-i18n-title]').forEach(function (el) {
+        el.setAttribute('title', t(el.getAttribute('data-i18n-title')));
+      });
+      document.querySelectorAll('[data-i18n-aria]').forEach(function (el) {
+        el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria')));
+      });
+      document.querySelectorAll('[data-i18n-html]').forEach(function (el) {
+        el.innerHTML = t(el.getAttribute('data-i18n-html'));
+      });
+      updateLangButton();
+      applyThemeTitles();
+      const otpEl = document.getElementById('otp');
+      if (otpEl && !otpEl.dataset.otp) otpEl.textContent = t('otpPending');
+      refreshCountdownLabel();
+    }
+
+    function updateLangButton() {
+      const btn = document.getElementById('lang-toggle');
+      const code = document.getElementById('lang-toggle-code');
+      if (!btn) return;
+      const isVi = currentLang !== 'en';
+      btn.classList.toggle('is-en', !isVi);
+      if (code) code.textContent = isVi ? 'VI' : 'EN';
+      const label = isVi ? t('a11y.langToEn') : t('a11y.langToVi');
+      btn.setAttribute('title', label);
+      btn.setAttribute('aria-label', label);
+    }
+
+    function initLanguage() {
+      const saved = localStorage.getItem(LANG_KEY);
+      currentLang = (saved === 'en' || saved === 'vi') ? saved : 'vi';
+      applyTranslations();
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang === 'en' ? 'en' : 'vi';
+      localStorage.setItem(LANG_KEY, currentLang);
+      applyTranslations();
+      renderSavedSecrets();
+    }
+
+    function toggleLanguage() {
+      setLanguage(currentLang === 'en' ? 'vi' : 'en');
+    }
+
+    function generateWindow(secret) {
+      const epoch = getEpochSec();
+      const slot = Math.floor(epoch / TOTP_PERIOD);
+      const remaining = TOTP_PERIOD - (epoch % TOTP_PERIOD);
+      return Promise.all([
+        otplib.authenticator.generateAtCounter(secret, slot),
+        otplib.authenticator.generateAtCounter(secret, slot + 1)
+      ]).then(function (pair) {
+        return { current: pair[0], next: pair[1], slot: slot, remaining: remaining };
+      });
+    }
+
     function cleanSecret(secret) {
-      return secret.replace(/\s/g, '').toUpperCase();
+      return String(secret || '').replace(/[\s-]+/g, '').toUpperCase();
     }
 
     function stripWhitespace(text) {
@@ -846,9 +1525,99 @@
       return stripWhitespace(text).toUpperCase().replace(/[^A-Z2-7]/g, '');
     }
 
+    function normalizeBase32Candidate(text) {
+      return String(text || '').toUpperCase().replace(/[\s-]+/g, '').replace(/[^A-Z2-7]/g, '');
+    }
+
     function isValidBase32(secret) {
-      const base32Regex = /^[A-Z2-7]+$/;
-      return base32Regex.test(secret);
+      return /^[A-Z2-7]+$/.test(secret || '');
+    }
+
+    function hasDelimiters(text) {
+      return /[|,\t]/.test(text || '');
+    }
+
+    function isMixedOrUri(text) {
+      const value = String(text || '');
+      return hasDelimiters(value) || /^otpauth:\/\//i.test(value.trim());
+    }
+
+    function looksLikeEmail(text) {
+      return /@/.test(String(text || '').trim());
+    }
+
+    function extractTotpSecret(raw) {
+      const trimmed = String(raw || '').trim();
+      if (!trimmed) return { error: 'empty' };
+
+      if (/^otpauth:\/\//i.test(trimmed)) {
+        try {
+          const url = new URL(trimmed);
+          if (url.protocol !== 'otpauth:') return { error: 'invalid' };
+          const secret = normalizeBase32Candidate(url.searchParams.get('secret') || '');
+          if (!isValidBase32(secret) || secret.length < 8) return { error: 'invalid' };
+          const path = decodeURIComponent((url.pathname || '').replace(/^\//, ''));
+          let label = path;
+          if (path.indexOf(':') !== -1) {
+            const bits = path.split(':');
+            bits.shift();
+            label = bits.join(':').trim();
+          }
+          const issuer = url.searchParams.get('issuer') || '';
+          return { secret: secret, label: label || issuer || null };
+        } catch (e) {
+          return { error: 'invalid' };
+        }
+      }
+
+      let parts;
+      if (trimmed.indexOf('|') !== -1) {
+        parts = trimmed.split(/\s*\|\s*/);
+      } else if (/\t/.test(trimmed)) {
+        parts = trimmed.split(/\t+/);
+      } else if (trimmed.indexOf(',') !== -1) {
+        parts = trimmed.split(/\s*,\s*/);
+      } else {
+        const only = normalizeBase32Candidate(trimmed);
+        if (isValidBase32(only) && only.length >= 8) return { secret: only, label: null };
+        return { error: 'invalid' };
+      }
+
+      const normalizedParts = parts.map(function (part) {
+        return { raw: String(part || '').trim(), secret: normalizeBase32Candidate(part) };
+      });
+
+      let chosenIndex = -1;
+      const last = normalizedParts[normalizedParts.length - 1];
+      if (last && isValidBase32(last.secret) && last.secret.length >= 8) {
+        chosenIndex = normalizedParts.length - 1;
+      } else {
+        for (let i = normalizedParts.length - 1; i >= 0; i--) {
+          if (isValidBase32(normalizedParts[i].secret) && normalizedParts[i].secret.length >= 16) {
+            chosenIndex = i;
+            break;
+          }
+        }
+      }
+      if (chosenIndex < 0) return { error: 'invalid' };
+
+      let label = null;
+      const firstRaw = normalizedParts[0] && normalizedParts[0].raw;
+      if (firstRaw && looksLikeEmail(firstRaw) && chosenIndex !== 0) {
+        label = firstRaw;
+      }
+      return { secret: normalizedParts[chosenIndex].secret, label: label };
+    }
+
+    function applyExtractedSecret(result) {
+      if (!result || result.error || !result.secret) return false;
+      const secretInput = document.getElementById('secret');
+      const nameInput = document.getElementById('account-name');
+      if (secretInput) secretInput.value = result.secret;
+      if (nameInput && result.label && !String(nameInput.value || '').trim()) {
+        nameInput.value = result.label;
+      }
+      return true;
     }
 
     function setErrorMessage(message) {
@@ -882,113 +1651,176 @@
       messageEl.textContent = '';
     }
 
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(function () {
+        toast.classList.remove('show');
+      }, 2400);
+    }
+
+    function formatOtpDisplay(otp) {
+      if (!otp || otp === t('otpPending')) return otp || '';
+      if (otp.length === 6) return otp.slice(0, 3) + ' ' + otp.slice(3);
+      return otp;
+    }
+
+    function setOtpValue(otp) {
+      const otpEl = document.getElementById('otp');
+      if (!otpEl) return;
+      if (!otp || otp === t('otpPending')) {
+        otpEl.dataset.otp = '';
+        otpEl.textContent = t('otpPending');
+        return;
+      }
+      otpEl.dataset.otp = otp;
+      otpEl.textContent = formatOtpDisplay(otp);
+    }
+
+    function setNextOtpValue(otp) {
+      const el = document.getElementById('otp-next');
+      const row = document.getElementById('next-otp-row');
+      if (!el) return;
+      if (!otp) {
+        el.dataset.otpNext = '';
+        el.textContent = '';
+        if (row) row.classList.add('is-hidden');
+        return;
+      }
+      el.dataset.otpNext = otp;
+      el.textContent = formatOtpDisplay(otp);
+      if (row) row.classList.remove('is-hidden');
+    }
+
+    function applyOtpWindow(win) {
+      if (!win) {
+        setOtpValue('');
+        setNextOtpValue('');
+        updateNearExpiryUi(0);
+        return;
+      }
+      setOtpValue(win.current);
+      setNextOtpValue(win.next);
+      updateNearExpiryUi(win.remaining);
+    }
+
+    function getOtpValue() {
+      const otpEl = document.getElementById('otp');
+      if (!otpEl) return '';
+      return String(otpEl.dataset.otp || '').replace(/\s/g, '');
+    }
+
+    function getNextOtpValue() {
+      const el = document.getElementById('otp-next');
+      if (!el) return '';
+      return String(el.dataset.otpNext || '').replace(/\s/g, '');
+    }
+
     function flashOtpCopiedFeedback() {
       const otpEl = document.getElementById('otp');
       const hintEl = document.getElementById('otp-copy-hint');
       const hintText = hintEl ? hintEl.querySelector('span') : null;
-      const previousHint = hintText ? hintText.textContent : '';
 
       if (otpEl) otpEl.classList.add('is-copied');
       if (hintEl) hintEl.classList.add('is-copied');
-      if (hintText) hintText.textContent = 'Đã copy!';
+      if (hintText) hintText.textContent = t('copiedHint');
 
       if (navigator.vibrate) {
         try { navigator.vibrate(12); } catch (e) { /* ignore */ }
       }
 
       clearTimeout(flashOtpCopiedFeedback._timer);
-      flashOtpCopiedFeedback._timer = setTimeout(() => {
+      flashOtpCopiedFeedback._timer = setTimeout(function () {
         if (otpEl) otpEl.classList.remove('is-copied');
         if (hintEl) hintEl.classList.remove('is-copied');
-        if (hintText) hintText.textContent = previousHint || 'Nhấn vào số để copy';
-      }, 1400);
+        if (hintText) hintText.textContent = t('clickToCopy');
+      }, 2800);
     }
 
-    function copyOTP() {
-      const otpValue = document.getElementById('otp').textContent.trim();
-      if (!otpValue || otpValue === 'Chưa tạo') {
-        return;
-      }
-
-      const onCopied = () => {
-        setSuccessMessage('Đã copy OTP vào clipboard.');
-        flashOtpCopiedFeedback();
-      };
-
-      // Thử dùng Clipboard API
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(otpValue).then(onCopied).catch(err => {
-          // Fallback dùng execCommand
+    function copyPlainText(text, onOk, onFail) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(onOk).catch(function () {
           try {
             const textarea = document.createElement('textarea');
-            textarea.value = otpValue;
+            textarea.value = text;
             document.body.appendChild(textarea);
             textarea.select();
             document.execCommand('copy');
             document.body.removeChild(textarea);
-            onCopied();
+            onOk();
           } catch (e) {
-            setErrorMessage('Không thể sao chép tự động. Hãy kiểm tra quyền clipboard của trình duyệt hoặc sao chép thủ công.');
+            onFail();
           }
         });
       } else {
-        // Fallback dùng execCommand
         try {
           const textarea = document.createElement('textarea');
-          textarea.value = otpValue;
+          textarea.value = text;
           document.body.appendChild(textarea);
           textarea.select();
           document.execCommand('copy');
           document.body.removeChild(textarea);
-          onCopied();
+          onOk();
         } catch (e) {
-          setErrorMessage('Không thể sao chép tự động. Hãy kiểm tra quyền clipboard của trình duyệt hoặc sao chép thủ công.');
+          onFail();
         }
       }
+    }
+
+    function copyOTP() {
+      const otpValue = getOtpValue();
+      if (!otpValue) return;
+
+      const seconds = getTimeRemaining();
+      const message = seconds <= NEAR_EXPIRY_SECONDS
+        ? (t('toast.copyCurrent', { otp: otpValue }) + t('toast.nearExpiry'))
+        : t('toast.copyCurrent', { otp: otpValue });
+
+      copyPlainText(otpValue, function () {
+        showToast(message);
+        flashOtpCopiedFeedback();
+      }, function () {
+        setErrorMessage(t('error.clipboard'));
+      });
+    }
+
+    function copyNextOtp() {
+      const otpValue = getNextOtpValue();
+      if (!otpValue) return;
+
+      copyPlainText(otpValue, function () {
+        showToast(t('toast.copyNext', { otp: otpValue }));
+        const row = document.getElementById('next-otp-row');
+        if (row) row.classList.add('is-copied');
+        clearTimeout(copyNextOtp._timer);
+        copyNextOtp._timer = setTimeout(function () {
+          if (row) row.classList.remove('is-copied');
+        }, 1400);
+      }, function () {
+        setErrorMessage(t('error.clipboard'));
+      });
     }
 
     function copyCurrentLink() {
       const secretInputEl = document.getElementById('secret');
-      const normalizedSecret = sanitizeSecretInput(secretInputEl ? secretInputEl.value : '');
-      if (!normalizedSecret) {
-        setErrorMessage('Vui lòng nhập mã 2FA trước khi copy link.');
+      const extracted = extractTotpSecret(secretInputEl ? secretInputEl.value : '');
+      const normalizedSecret = (extracted && extracted.secret) ? extracted.secret : sanitizeSecretInput(secretInputEl ? secretInputEl.value : '');
+      if (!normalizedSecret || !isValidBase32(normalizedSecret)) {
+        setErrorMessage(t('error.copyLinkNeedSecret'));
         return;
       }
 
-      if (secretInputEl && secretInputEl.value !== normalizedSecret) {
-        secretInputEl.value = normalizedSecret;
-      }
+      if (secretInputEl) secretInputEl.value = normalizedSecret;
 
-      const linkToCopy = `https://2fa.muabanquyen.com/${normalizedSecret}`;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(linkToCopy).then(() => {
-          setSuccessMessage('Đã copy link: ' + linkToCopy);
-        }).catch(() => {
-          try {
-            const textarea = document.createElement('textarea');
-            textarea.value = linkToCopy;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            setSuccessMessage('Đã copy link: ' + linkToCopy);
-          } catch (e) {
-            setErrorMessage('Lỗi khi copy link. Vui lòng thử lại.');
-          }
-        });
-      } else {
-        try {
-          const textarea = document.createElement('textarea');
-          textarea.value = linkToCopy;
-          document.body.appendChild(textarea);
-          textarea.select();
-          document.execCommand('copy');
-          document.body.removeChild(textarea);
-          setSuccessMessage('Đã copy link: ' + linkToCopy);
-        } catch (e) {
-          setErrorMessage('Lỗi khi copy link. Vui lòng thử lại.');
-        }
-      }
+      const linkToCopy = 'https://2fa.muabanquyen.com/' + normalizedSecret;
+      copyPlainText(linkToCopy, function () {
+        showToast(t('toast.copyLink'));
+      }, function () {
+        setErrorMessage(t('error.copyLinkFail'));
+      });
     }
 
     let countdownInterval = null;
@@ -999,6 +1831,15 @@
     let savedSecrets = [];
     let hasManualThemeChoice = false;
 
+    function applyThemeTitles() {
+      const toggle = document.getElementById('theme-toggle');
+      if (!toggle) return;
+      const isDark = document.body.classList.contains('theme-dark');
+      const key = isDark ? 'a11y.themeToLight' : 'a11y.themeToDark';
+      toggle.title = t(key);
+      toggle.setAttribute('aria-label', t(key));
+    }
+
     function applyTheme(theme) {
       const body = document.body;
       const toggle = document.getElementById('theme-toggle');
@@ -1006,8 +1847,8 @@
       body.classList.toggle('theme-dark', isDark);
       if (toggle) {
         toggle.textContent = isDark ? '☀️' : '🌙';
-        toggle.title = isDark ? 'Chuyển sang Light mode' : 'Chuyển sang Dark mode';
       }
+      applyThemeTitles();
     }
 
     function detectSystemTheme() {
@@ -1037,7 +1878,7 @@
         const raw = localStorage.getItem(STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : [];
         if (Array.isArray(parsed)) {
-          savedSecrets = parsed.filter(item => item && item.secret && item.name);
+          savedSecrets = parsed.filter(function (item) { return item && item.secret && item.name; });
         } else {
           savedSecrets = [];
         }
@@ -1051,8 +1892,14 @@
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(savedSecrets));
       } catch (error) {
-        setErrorMessage('Không thể lưu danh sách 2FA trên trình duyệt này.');
+        setErrorMessage(t('error.saveStorage'));
       }
+    }
+
+    function touchLastUsed(id) {
+      const item = savedSecrets.find(function (entry) { return entry.id === id; });
+      if (!item) return;
+      item.lastUsedAt = Date.now();
     }
 
     function renderSavedSecrets() {
@@ -1062,32 +1909,32 @@
       const search = ((searchInput && searchInput.value) || '').trim().toLowerCase();
       updateClearSearchButtonVisibility();
 
-      const filtered = savedSecrets.filter(item => item.name.toLowerCase().includes(search));
+      const filtered = savedSecrets.filter(function (item) {
+        return item.name.toLowerCase().includes(search);
+      });
       listContainer.innerHTML = '';
 
       if (!filtered.length) {
-        const emptyMessage = savedSecrets.length === 0
-          ? 'Chưa có mã 2FA nào được lưu.'
-          : 'Không có mã nào khớp tìm kiếm.';
-        listContainer.innerHTML = `<div class="empty-list">${emptyMessage}</div>`;
+        const emptyMessage = savedSecrets.length === 0 ? t('empty.none') : t('empty.noMatch');
+        listContainer.innerHTML = '<div class="empty-list">' + emptyMessage + '</div>';
         return;
       }
 
-      filtered.forEach(item => {
+      filtered.forEach(function (item) {
         const card = document.createElement('div');
         card.className = 'saved-item';
-
         const maskedSecret = item.secret.slice(0, 4) + ' •••• ••••';
-        card.innerHTML = `
-          <div class="saved-item-header">
-            <div class="saved-item-name">${escapeHtml(item.name)}</div>
-          </div>
-          <div class="saved-item-secret">${escapeHtml(maskedSecret)}</div>
-          <div class="saved-item-actions">
-            <button onclick="useSavedSecret('${item.id}')">Dùng mã</button>
-            <button class="danger-btn" onclick="deleteSecretById('${item.id}')">Xóa</button>
-          </div>
-        `;
+        const safeId = escapeHtml(item.id);
+        card.innerHTML =
+          '<div class="saved-item-header">' +
+            '<div class="saved-item-name">' + escapeHtml(item.name) + '</div>' +
+          '</div>' +
+          '<div class="saved-item-secret">' + escapeHtml(maskedSecret) + '</div>' +
+          '<div class="saved-item-actions">' +
+            '<button type="button" onclick="generateFromSaved(\'' + safeId + '\')">' + escapeHtml(t('btn.otp')) + '</button>' +
+            '<button type="button" onclick="useSavedSecret(\'' + safeId + '\')">' + escapeHtml(t('btn.use')) + '</button>' +
+            '<button type="button" class="danger-btn" onclick="deleteSecretById(\'' + safeId + '\')">' + escapeHtml(t('btn.delete')) + '</button>' +
+          '</div>';
         listContainer.appendChild(card);
       });
     }
@@ -1110,55 +1957,71 @@
     function saveCurrentSecret() {
       const accountNameInput = document.getElementById('account-name');
       const secretInput = document.getElementById('secret');
-      const cleanSecretInput = cleanSecret(secretInput.value || '');
-      const accountName = (accountNameInput.value || '').trim();
+      const extracted = extractTotpSecret(secretInput ? secretInput.value : '');
+      if (extracted && extracted.secret) applyExtractedSecret(extracted);
+      const cleanSecretInput = (extracted && extracted.secret) ? extracted.secret : cleanSecret(secretInput ? secretInput.value : '');
+      const accountName = ((accountNameInput && accountNameInput.value) || '').trim();
 
       clearMessage();
       if (!accountName) {
-        setErrorMessage('Vui lòng nhập tên tài khoản trước khi lưu.');
+        setErrorMessage(t('error.saveName'));
         return;
       }
-      if (!cleanSecretInput || !isValidBase32(cleanSecretInput)) {
-        setErrorMessage('Mã 2FA không hợp lệ nên chưa thể lưu.');
+      if (!cleanSecretInput || !isValidBase32(cleanSecretInput) || cleanSecretInput.length < 8) {
+        setErrorMessage(t('error.saveSecret'));
         return;
       }
 
-      const nameExists = savedSecrets.some(item => item.name.toLowerCase() === accountName.toLowerCase());
+      const nameExists = savedSecrets.some(function (item) {
+        return item.name.toLowerCase() === accountName.toLowerCase();
+      });
       if (nameExists) {
-        setErrorMessage('Tên mã này đã tồn tại, vui lòng chọn tên khác.');
+        setErrorMessage(t('error.saveDuplicate'));
         return;
       }
 
-      const newItem = {
+      savedSecrets.push({
         id: Date.now().toString(36),
         name: accountName,
-        secret: cleanSecretInput
-      };
-      savedSecrets.push(newItem);
+        secret: cleanSecretInput,
+        lastUsedAt: Date.now()
+      });
 
       persistSavedSecrets();
       renderSavedSecrets();
-      setSuccessMessage('Đã lưu mã 2FA vào danh sách.');
+      showToast(t('toast.saved'));
     }
 
     function useSavedSecret(id) {
-      const selected = savedSecrets.find(item => item.id === id);
+      const selected = savedSecrets.find(function (item) { return item.id === id; });
       if (!selected) return;
-
       document.getElementById('secret').value = selected.secret;
       document.getElementById('account-name').value = selected.name;
+      touchLastUsed(id);
+      persistSavedSecrets();
       handleSecretInput();
     }
 
-    function deleteSecretById(id) {
-      const selected = savedSecrets.find(item => item.id === id);
+    function generateFromSaved(id) {
+      const selected = savedSecrets.find(function (item) { return item.id === id; });
       if (!selected) return;
-      if (!window.confirm(`Xóa mã đã lưu "${selected.name}"?`)) return;
-
-      savedSecrets = savedSecrets.filter(item => item.id !== id);
+      document.getElementById('secret').value = selected.secret;
+      document.getElementById('account-name').value = selected.name;
+      touchLastUsed(id);
       persistSavedSecrets();
       renderSavedSecrets();
-      setSuccessMessage('Đã xóa mã 2FA đã lưu.');
+      generateOTP({ copyAfter: true });
+    }
+
+    function deleteSecretById(id) {
+      const selected = savedSecrets.find(function (item) { return item.id === id; });
+      if (!selected) return;
+      if (!window.confirm(t('confirm.delete', { name: selected.name }))) return;
+
+      savedSecrets = savedSecrets.filter(function (item) { return item.id !== id; });
+      persistSavedSecrets();
+      renderSavedSecrets();
+      showToast(t('toast.deleted'));
     }
 
     function escapeHtml(text) {
@@ -1168,33 +2031,54 @@
     }
 
     function getTimeRemaining() {
-      const epoch = Math.floor(Date.now() / 1000);
-      const timeStep = 30;
-      return timeStep - (epoch % timeStep);
+      return TOTP_PERIOD - (getEpochSec() % TOTP_PERIOD);
     }
 
     function getCurrentTimeSlot() {
-      const epoch = Math.floor(Date.now() / 1000);
-      return Math.floor(epoch / 30);
+      return Math.floor(getEpochSec() / TOTP_PERIOD);
+    }
+
+    function refreshCountdownLabel() {
+      const countdownDisplay = document.getElementById('countdown');
+      if (!countdownDisplay || !currentSecret) return;
+      countdownDisplay.textContent = t('countdown', { seconds: getTimeRemaining() });
+    }
+
+    function updateNearExpiryUi(seconds) {
+      const row = document.getElementById('next-otp-row');
+      const hint = document.getElementById('near-expiry-hint');
+      const near = !!currentSecret && seconds > 0 && seconds <= NEAR_EXPIRY_SECONDS;
+      if (row) row.classList.toggle('is-near-expiry', near);
+      if (hint) hint.classList.toggle('is-hidden', !near);
+    }
+
+    function resetCountdownUi() {
+      const countdownDisplay = document.getElementById('countdown');
+      const progressBar = document.getElementById('otp-progress-bar');
+      if (countdownDisplay) countdownDisplay.textContent = '';
+      if (progressBar) progressBar.style.width = '0%';
+      setNextOtpValue('');
+      updateNearExpiryUi(0);
     }
 
     function startCountdown() {
       if (countdownInterval) clearInterval(countdownInterval);
       const countdownDisplay = document.getElementById('countdown');
+      const progressBar = document.getElementById('otp-progress-bar');
 
       function updateCountdown() {
         const seconds = getTimeRemaining();
         const currentTimeSlot = getCurrentTimeSlot();
+        if (countdownDisplay) countdownDisplay.textContent = t('countdown', { seconds: seconds });
+        if (progressBar) progressBar.style.width = ((seconds / TOTP_PERIOD) * 100) + '%';
+        updateNearExpiryUi(seconds);
 
-        countdownDisplay.textContent = `Mã OTP sẽ cập nhật sau ${seconds} giây...`;
-
-        // Kiểm tra nếu đã sang chu kỳ mới (30 giây)
         if (currentTimeSlot !== lastOtpTime && currentSecret) {
           lastOtpTime = currentTimeSlot;
-          otplib.authenticator.generate(currentSecret).then(otp => {
-            document.getElementById('otp').textContent = otp;
-          }).catch(error => {
-            setErrorMessage('Lỗi khi tạo OTP: ' + error.message);
+          generateWindow(currentSecret).then(function (win) {
+            applyOtpWindow(win);
+          }).catch(function (error) {
+            setErrorMessage(t('error.generate', { error: error.message }));
             clearInterval(countdownInterval);
           });
         }
@@ -1204,44 +2088,56 @@
       countdownInterval = setInterval(updateCountdown, 1000);
     }
 
-    function generateOTP() {
-      const secretInput = document.getElementById('secret').value;
-      const otpDisplay = document.getElementById('otp');
-      const countdownDisplay = document.getElementById('countdown');
+    function generateOTP(options) {
+      options = options || {};
+      const secretInputEl = document.getElementById('secret');
+      const extracted = extractTotpSecret(secretInputEl ? secretInputEl.value : '');
+      if (extracted && extracted.secret) {
+        applyExtractedSecret(extracted);
+      } else if (secretInputEl && isMixedOrUri(secretInputEl.value)) {
+        setOtpValue('');
+        resetCountdownUi();
+        if (countdownInterval) clearInterval(countdownInterval);
+        currentSecret = '';
+        lastOtpTime = 0;
+        setErrorMessage(t('error.extract'));
+        return;
+      }
 
-      // Reset thông báo
-      otpDisplay.textContent = 'Chưa tạo';
-      clearMessage();
-      countdownDisplay.textContent = '';
+      const cleanSecretInput = (extracted && extracted.secret)
+        ? extracted.secret
+        : cleanSecret(secretInputEl ? secretInputEl.value : '');
 
-      if (!secretInput) {
-        setErrorMessage('Vui lòng nhập mã bí mật!');
+      if (!options.keepMessage) clearMessage();
+      setOtpValue('');
+      resetCountdownUi();
+
+      if (!cleanSecretInput) {
+        setErrorMessage(t('error.emptySecret'));
         if (countdownInterval) clearInterval(countdownInterval);
         return;
       }
 
-      const cleanSecretInput = cleanSecret(secretInput);
-
-      if (!isValidBase32(cleanSecretInput)) {
-        setErrorMessage('Mã bí mật không đúng định dạng Base32 (chỉ dùng A-Z, 2-7)!');
+      if (!isValidBase32(cleanSecretInput) || cleanSecretInput.length < 8) {
+        setErrorMessage(t('error.invalidBase32'));
         if (countdownInterval) clearInterval(countdownInterval);
         return;
       }
 
-      if (!otplib.authenticator || typeof otplib.authenticator.generate !== 'function') {
-        setErrorMessage('Lỗi: Thư viện OTP không khả dụng!');
+      if (!otplib.authenticator || typeof otplib.authenticator.generateAtCounter !== 'function') {
+        setErrorMessage(t('error.otplib'));
         if (countdownInterval) clearInterval(countdownInterval);
         return;
       }
 
       currentSecret = cleanSecretInput;
       lastOtpTime = getCurrentTimeSlot();
-      otplib.authenticator.generate(currentSecret).then(otp => {
-        otpDisplay.textContent = otp;
+      generateWindow(currentSecret).then(function (win) {
+        applyOtpWindow(win);
         startCountdown();
-        setSuccessMessage('Đã tạo OTP. Lưu ý mã OTP thay đổi sau mỗi 30 giây, hãy nhấn vào 6 SỐ sẽ tự động copy.');
-      }).catch(error => {
-        setErrorMessage('Lỗi khi tạo OTP: ' + error.message);
+        if (options.copyAfter) copyOTP();
+      }).catch(function (error) {
+        setErrorMessage(t('error.generate', { error: error.message }));
         if (countdownInterval) clearInterval(countdownInterval);
       });
     }
@@ -1266,70 +2162,126 @@
     async function autoPasteOnLoad() {
       const permissionState = await getClipboardReadPermissionState();
       if (permissionState === 'denied') return;
-
       try {
-        // On supported browsers, this call triggers the permission prompt on page load.
         const text = await readClipboardTextSafely();
-        applyClipboardTextToSecret(text, 'Đã tự động dán mã từ clipboard.');
+        applyClipboardTextToSecret(text, 'Đã nhận secret từ clipboard.');
       } catch (_) {
         // Silent on load: many browsers block clipboard read before user gesture.
       }
     }
 
-    function applyClipboardTextToSecret(text, successMessage) {
-      const secretInput = document.getElementById('secret');
-      if (!secretInput) return false;
-      const compactText = sanitizeSecretInput(text);
-      if (!compactText) return false;
-      secretInput.value = compactText;
-      handleSecretInput();
-      if (successMessage) setSuccessMessage(successMessage);
-      return true;
-    }
-
-    function parseSecretFromUrl() {
-      let path = "";
-      try {
-        path = decodeURIComponent(window.location.pathname);
-      } catch (e) {
-        // Fallback or ignore if URL contains invalid encoded characters
-      }
-
-      if (path.startsWith('/')) {
-        path = path.substring(1);
-      }
-
-      const compactPath = sanitizeSecretInput(path);
-      const cleanPath = cleanSecret(compactPath);
-
-      if (cleanPath && isValidBase32(cleanPath)) {
-        const expectedPath = '/' + compactPath;
-        if (window.location.pathname !== expectedPath) {
-          window.location.replace(expectedPath + window.location.search + window.location.hash);
-          return true;
-        }
-
-        const secretInput = document.getElementById('secret');
-        if (!secretInput) return false;
-        secretInput.value = compactPath;
-        handleSecretInput();
-
-        // Show success notice
-        setSuccessMessage('Đã tự động tạo OTP từ mã trong đường dẫn.');
+    function applyClipboardTextToSecret(text) {
+      const extracted = extractTotpSecret(text);
+      if (extracted && extracted.secret) {
+        applyExtractedSecret(extracted);
+        generateOTP({ keepMessage: true });
+        showToast(t('toast.pasted'));
         return true;
+      }
+      if (isMixedOrUri(text)) {
+        setErrorMessage(t('error.extract'));
+        return 'invalid';
       }
       return false;
     }
 
-    // Initialize logic when page loads
+    function parseSecretFromUrl() {
+      if (typeof location !== 'undefined' && location.protocol === 'file:') return false;
+
+      let hashRaw = '';
+      try {
+        const hash = decodeURIComponent(window.location.hash || '');
+        const match = hash.match(/^#s=([^&]+)/i);
+        if (match) hashRaw = match[1];
+      } catch (e) { /* ignore */ }
+
+      let path = '';
+      try {
+        path = decodeURIComponent(window.location.pathname || '');
+      } catch (e) { /* ignore */ }
+      if (path.startsWith('/')) path = path.substring(1);
+      if (/\.html?$/i.test(path) || path.indexOf(':') !== -1 || path.indexOf('\\') !== -1 || path.indexOf('/') !== -1) {
+        path = '';
+      }
+
+      const hashExtracted = hashRaw ? extractTotpSecret(hashRaw) : null;
+      const pathExtracted = path ? extractTotpSecret(path) : null;
+      const extracted = (hashExtracted && hashExtracted.secret)
+        ? hashExtracted
+        : ((pathExtracted && pathExtracted.secret) ? pathExtracted : null);
+      if (!extracted || !extracted.secret) return false;
+
+      applyExtractedSecret(extracted);
+      generateOTP({ keepMessage: true });
+
+      try {
+        history.replaceState(null, '', '/' + extracted.secret);
+      } catch (e) { /* ignore */ }
+      showToast(t('toast.fromLink'));
+      return true;
+    }
+
+    function openHelp() {
+      const dialog = document.getElementById('help-dialog');
+      if (!dialog) return;
+      if (typeof dialog.showModal === 'function') dialog.showModal();
+      else dialog.setAttribute('open', '');
+    }
+
+    function closeHelp() {
+      const dialog = document.getElementById('help-dialog');
+      if (!dialog) return;
+      if (typeof dialog.close === 'function' && dialog.open) dialog.close();
+      else dialog.removeAttribute('open');
+    }
+
+    function setupHelpDialog() {
+      const dialog = document.getElementById('help-dialog');
+      if (!dialog) return;
+      dialog.addEventListener('click', function (event) {
+        if (event.target === dialog) closeHelp();
+      });
+    }
+
+    function setupKeyboardShortcuts() {
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+          closeHelp();
+          return;
+        }
+        if (event.key === 'Enter' && event.target && event.target.id === 'secret') {
+          if (event.isComposing || event.keyCode === 229) return;
+          event.preventDefault();
+          generateOTP();
+          return;
+        }
+        if ((event.ctrlKey || event.metaKey) && (event.key === 'c' || event.key === 'C')) {
+          const otpEl = document.getElementById('otp');
+          const nextEl = document.getElementById('otp-next');
+          const nextRow = document.getElementById('next-otp-row');
+          const card = document.getElementById('otp-card');
+          const active = document.activeElement;
+          if (active === nextEl || active === nextRow || (nextRow && nextRow.contains(active))) {
+            event.preventDefault();
+            copyNextOtp();
+            return;
+          }
+          if (active === otpEl || (card && card.contains(active))) {
+            event.preventDefault();
+            copyOTP();
+          }
+        }
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
+      initLanguage();
       initTheme();
       setupSecretPasteHandler();
+      setupHelpDialog();
+      setupKeyboardShortcuts();
       loadSavedSecretsFromStorage();
-      if (parseSecretFromUrl()) {
-        return; // Do not auto-paste if a valid code was found in the URL
-      }
-      // Small delay to ensure page is fully loaded
+      if (parseSecretFromUrl()) return;
       setTimeout(autoPasteOnLoad, 500);
     });
 
@@ -1347,29 +2299,26 @@
       if (!secretInput) return;
       secretInput.addEventListener('paste', function (event) {
         const text = event.clipboardData ? event.clipboardData.getData('text') : '';
-        const applied = applyClipboardTextToSecret(text, 'Đã dán mã từ clipboard.');
+        const applied = applyClipboardTextToSecret(text);
         if (applied) event.preventDefault();
       });
     }
 
     function handleSecretInput() {
       const secretInputEl = document.getElementById('secret');
+      if (!secretInputEl) return;
       const rawSecretInput = secretInputEl.value;
-      const compactSecretInput = sanitizeSecretInput(rawSecretInput);
-      if (rawSecretInput !== compactSecretInput) {
-        secretInputEl.value = compactSecretInput;
-      }
-      const cleanSecretInput = cleanSecret(compactSecretInput);
+      if (isMixedOrUri(rawSecretInput)) return;
 
-      if (cleanSecretInput && isValidBase32(cleanSecretInput)) {
+      const compactSecretInput = sanitizeSecretInput(rawSecretInput);
+      if (rawSecretInput !== compactSecretInput) secretInputEl.value = compactSecretInput;
+
+      if (compactSecretInput && isValidBase32(compactSecretInput) && compactSecretInput.length >= 8) {
         generateOTP();
       } else {
-        // Reset nếu mã không hợp lệ
-        const otpDisplay = document.getElementById('otp');
-        const countdownDisplay = document.getElementById('countdown');
-        otpDisplay.textContent = 'Chưa tạo';
+        setOtpValue('');
         clearMessage();
-        countdownDisplay.textContent = '';
+        resetCountdownUi();
         if (countdownInterval) clearInterval(countdownInterval);
         currentSecret = '';
         lastOtpTime = 0;

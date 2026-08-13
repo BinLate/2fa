@@ -1,4 +1,6 @@
 # START Rewrite for 2FA URL Params
+# Keep path rewrite for legacy Copy Link URLs: /{BASE32_SECRET} → index.html.
+# New links use hash only: /#s={SECRET} (hash is not sent to Apache / access logs).
 <IfModule mod_rewrite.c>
   RewriteEngine On
   # Nếu không phải là file có thật
