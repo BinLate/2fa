@@ -1,0 +1,11 @@
+# START Rewrite for 2FA URL Params
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Nếu không phải là file có thật
+  RewriteCond %{REQUEST_FILENAME} !-f
+  # Và không phải là thư mục có thật
+  RewriteCond %{REQUEST_FILENAME} !-d
+  # Thì chuyển toàn bộ request về index.html
+  RewriteRule ^(.*)$ index.html [L,QSA]
+</IfModule>
+# END Rewrite for 2FA URL Params

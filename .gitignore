@@ -1,0 +1,24 @@
+# Secrets & env
+.env
+.env.*
+!.env.example
+
+# Local deploy scripts / SSH
+*.bat
+*.pem
+*.key
+.ssh/
+
+# OS / editor
+Thumbs.db
+.DS_Store
+*.log
+*.tmp
+
+# Python / Node leftovers
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+node_modules/
+dist/
