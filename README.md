@@ -1,71 +1,46 @@
-# 2FA / TOTP generator
+# 2FA / TOTP
 
-Fast, compact TOTP (2FA) utility. Codes are generated **in your browser** with HMAC-SHA1. There is no app backend.
+Tạo mã OTP (2FA) ngay trên trình duyệt. Không backend, không npm, không bước build.
 
-## Demo
+- Demo: https://2fa.muabanquyen.com/
+- Mã nguồn: https://github.com/BinLate/2fa
 
-https://2fa.muabanquyen.com/
+## Tính năng
 
-Source: https://github.com/BinLate/2fa
+- TOTP HMAC-SHA1, 6 số, chu kỳ 30 giây
+- Mã **hiện tại** và **tiếp theo** — bấm vào số để copy
+- Đếm ngược + thanh thời gian
+- Dán secret, hoặc cả dòng `email|password|secret` (tab / dấu phẩy cũng được). Field thừa, số đơn, URL bị bỏ qua
+- Lưu danh sách tài khoản trên trình duyệt này (tìm, xóa, tạo OTP từng dòng)
+- Tiếng Việt / English, dark / light
+- Copy Link: `https://2fa.muabanquyen.com/{SECRET}`
+- Hộp hướng dẫn nhanh
 
-## Features
+## Quyền riêng tư
 
-- Generate TOTP (HMAC-SHA1, 6 digits, 30-second period)
-- Current OTP + **Next OTP** (click either to copy)
-- Countdown + thin progress bar
-- Click-to-copy with overlay toast (no layout jump)
-- Smart paste: secret only, or `email|password|secret` (tab/comma too)
-- Saved accounts in this browser (search, delete, row OTP)
-- Dark / light mode
-- Vietnamese / English
-- Local `localStorage` vault
-- Responsive (including ~1366×768 and mobile)
-- Copy Link (`https://2fa.muabanquyen.com/{SECRET}`)
-- Help dialog
+Mã OTP được tạo trên máy bạn. Danh sách đã lưu nằm trong trình duyệt (`localStorage`). Website không gửi secret 2FA hay tên tài khoản lên server của chúng tôi. Xóa dữ liệu / cache hoặc cài lại trình duyệt có thể làm mất danh sách.
 
-## Privacy / Security
+Mã nguồn mở — xem `index.html` để tự kiểm tra.
 
-- Saved accounts live in **this browser** (`localStorage` key `twofa.savedSecrets.v1`).
-- OTP is generated locally. This site does **not** upload your 2FA secrets or account names to our server.
-- Clearing site data / cache or reinstalling the browser can **delete** the saved list.
+## Chạy local
 
-## Installation / Development
-
-This is a **static** site. There is no `package.json` and no build step.
+Site tĩnh. Clone rồi mở `index.html`, hoặc serve thư mục bằng bất kỳ static server nào.
 
 ```bash
 git clone https://github.com/BinLate/2fa.git
 cd 2fa
 ```
 
-Preview options:
+File cần có:
 
-- Open `index.html` in a browser (most flows work; Apache rewrite is not used).
-- Or serve the folder with any static server, for example:
-
-```bash
-npx --yes serve .
-```
-
-TOTP unit check (Node, no npm install):
-
-```bash
-node tests/totp.test.js
-```
+- `index.html`
+- `.htaccess` (Apache: rewrite `/{SECRET}` về `index.html`)
+- `favicon.png`
+- `LICENSE`
 
 ## Deploy
 
-Copy these files to an Apache `DocumentRoot` (HTTPS recommended):
-
-- `index.html`
-- `.htaccess` (rewrites legacy `/{secret}` paths to `index.html`)
-- `favicon.png`
-
-Optional: `LICENSE`, `README.md`.
-
-## Open source
-
-You can read `index.html` to see how TOTP secrets are parsed, stored locally, and never posted by app code to our server.
+Copy các file trên lên Apache `DocumentRoot` (nên dùng HTTPS).
 
 ## License
 
