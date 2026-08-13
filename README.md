@@ -20,17 +20,14 @@ Source: https://github.com/BinLate/2fa
 - Vietnamese / English
 - Local `localStorage` vault
 - Responsive (including ~1366×768 and mobile)
-- Copy Link (`https://2fa.muabanquyen.com/{SECRET}`; old `#s=` links still work)
+- Copy Link (`https://2fa.muabanquyen.com/{SECRET}`)
 - Help dialog
 
 ## Privacy / Security
 
-- Saved accounts (`name` + TOTP secret) live in **this browser** under `localStorage` key `twofa.savedSecrets.v1`. They are **plaintext** (not encrypted).
-- OTP is computed locally with the Web Crypto API. This site’s JavaScript does **not** upload your 2FA secrets or account names to our server.
+- Saved accounts live in **this browser** (`localStorage` key `twofa.savedSecrets.v1`).
+- OTP is generated locally. This site does **not** upload your 2FA secrets or account names to our server.
 - Clearing site data / cache or reinstalling the browser can **delete** the saved list.
-- The page still loads **Font Awesome** (cdnjs) and **Google Fonts**. Those CDNs see your IP/user-agent, **not** your TOTP secret.
-- **Copy Link** includes the secret in the URL (`https://2fa.muabanquyen.com/{SECRET}`). That path **can** appear in Apache access logs. Old `#s=` hash links still open and generate OTP.
-- Do not share secrets or Copy Link URLs publicly. A lock icon is **not** encryption.
 
 ## Installation / Development
 
