@@ -39,3 +39,6 @@ cgi-bin/
 design-system/
 docs/
 specs/
+
+# Local TOTP checks (not required to run the site)
+tests/
