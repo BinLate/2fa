@@ -1543,6 +1543,61 @@
       return /@/.test(String(text || '').trim());
     }
 
+    function looksLikeHttpUrl(text) {
+      const value = String(text || '').trim();
+      if (!value || /^otpauth:\/\//i.test(value)) return false;
+      return /^(https?:\/\/|\/\/|www\.)/i.test(value) || /\bhttps?:\/\//i.test(value);
+    }
+
+    function isBase32Token(text) {
+      return /^[A-Za-z2-7]+$/.test(String(text || '')) && String(text).length >= 2;
+    }
+
+    function cleanBase32(text) {
+      const cleaned = String(text || '').toUpperCase().replace(/[\s-=]+/g, '');
+      return /^[A-Z2-7]+$/.test(cleaned) ? cleaned : '';
+    }
+
+    function groupedBase32(text, minLen) {
+      const min = minLen || 16;
+      const tokens = String(text || '').trim().split(/\s+/).filter(Boolean);
+      let best = '';
+      let run = [];
+
+      function flush() {
+        const joined = run.join('').toUpperCase();
+        if (joined.length >= min && joined.length > best.length) best = joined;
+        run = [];
+      }
+
+      for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i];
+        if (token.indexOf('-') !== -1) {
+          const bits = token.split('-').filter(Boolean);
+          if (bits.length > 1 && bits.every(isBase32Token)) {
+            run.push(bits.join(''));
+            continue;
+          }
+        }
+        if (isBase32Token(token)) {
+          run.push(token);
+        } else {
+          flush();
+        }
+      }
+      flush();
+      return best;
+    }
+
+    function secretFromPart(part, minLen) {
+      const raw = String(part || '').trim();
+      if (!raw || looksLikeHttpUrl(raw)) return '';
+      const grouped = groupedBase32(raw, minLen);
+      if (grouped) return grouped;
+      const clean = cleanBase32(raw);
+      return clean.length >= minLen ? clean : '';
+    }
+
     function extractTotpSecret(raw) {
       const trimmed = String(raw || '').trim();
       if (!trimmed) return { error: 'empty' };
@@ -1575,35 +1630,43 @@
       } else if (trimmed.indexOf(',') !== -1) {
         parts = trimmed.split(/\s*,\s*/);
       } else {
-        const only = normalizeBase32Candidate(trimmed);
-        if (isValidBase32(only) && only.length >= 8) return { secret: only, label: null };
+        if (looksLikeHttpUrl(trimmed)) return { error: 'invalid' };
+        const grouped = groupedBase32(trimmed, 16);
+        if (grouped) return { secret: grouped, label: null };
+        const only = cleanBase32(trimmed);
+        if (only.length >= 8) return { secret: only, label: null };
         return { error: 'invalid' };
       }
 
-      const normalizedParts = parts.map(function (part) {
-        return { raw: String(part || '').trim(), secret: normalizeBase32Candidate(part) };
+      const parsedParts = parts.map(function (part) {
+        return { raw: String(part || '').trim() };
       });
 
+      let chosenSecret = '';
       let chosenIndex = -1;
-      const last = normalizedParts[normalizedParts.length - 1];
-      if (last && isValidBase32(last.secret) && last.secret.length >= 8) {
-        chosenIndex = normalizedParts.length - 1;
+      const last = parsedParts[parsedParts.length - 1];
+      const lastSecret = last ? secretFromPart(last.raw, 8) : '';
+      if (lastSecret) {
+        chosenSecret = lastSecret;
+        chosenIndex = parsedParts.length - 1;
       } else {
-        for (let i = normalizedParts.length - 1; i >= 0; i--) {
-          if (isValidBase32(normalizedParts[i].secret) && normalizedParts[i].secret.length >= 16) {
+        for (let i = parsedParts.length - 1; i >= 0; i--) {
+          const candidate = secretFromPart(parsedParts[i].raw, 16);
+          if (candidate) {
+            chosenSecret = candidate;
             chosenIndex = i;
             break;
           }
         }
       }
-      if (chosenIndex < 0) return { error: 'invalid' };
+      if (!chosenSecret) return { error: 'invalid' };
 
       let label = null;
-      const firstRaw = normalizedParts[0] && normalizedParts[0].raw;
+      const firstRaw = parsedParts[0] && parsedParts[0].raw;
       if (firstRaw && looksLikeEmail(firstRaw) && chosenIndex !== 0) {
         label = firstRaw;
       }
-      return { secret: normalizedParts[chosenIndex].secret, label: label };
+      return { secret: chosenSecret, label: label };
     }
 
     function applyExtractedSecret(result) {
