@@ -1079,6 +1079,19 @@
     body.theme-dark .help-head {
       border-color: rgba(71, 85, 105, 0.55);
     }
+
+    .history-section { margin-top: 24px; animation: none; }
+    .history-note { color: #526173; font-size: 14px; line-height: 1.6; margin-bottom: 16px; }
+    .history-list { list-style: none; max-height: 360px; overflow: auto; }
+    .history-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #dfe8ef; }
+    .history-link { flex: 1; min-width: 0; color: #1565c0; overflow-wrap: anywhere; padding: 8px 0; font-family: Consolas, monospace; font-size: 14px; }
+    .history-delete { flex-shrink: 0; width: 44px; height: 44px; padding: 0; background: transparent; color: #b91c1c; box-shadow: none; }
+    .history-clear { margin-top: 16px; background: #b91c1c; box-shadow: none; }
+    .history-section :focus-visible { outline: 3px solid #2585cf; outline-offset: 3px; }
+    body.theme-dark .history-note { color: #cbd5e1; }
+    body.theme-dark .history-link { color: #93c5fd; }
+    body.theme-dark .history-row { border-color: #334155; }
+    body.theme-dark .history-delete { color: #fca5a5; }
   </style>
 </head>
 
@@ -1204,6 +1217,13 @@
     </div>
   </div>
 
+  <section class="container history-section" aria-labelledby="history-heading">
+    <h3 id="history-heading" data-i18n="history.heading">Lịch sử mã 2FA đã nhập</h3>
+    <p class="history-note" data-i18n="history.note"></p>
+    <ul id="input-history" class="history-list"></ul>
+    <button id="clear-history" type="button" class="danger-btn history-clear" onclick="clearInputHistory()" data-i18n="history.clear">Xóa tất cả lịch sử</button>
+  </section>
+
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <dialog id="help-dialog" class="help-dialog" aria-labelledby="help-title">
@@ -1302,6 +1322,13 @@
     var currentLang = 'vi';
     var I18N = {
       vi: {
+        "history.heading": "Lịch sử mã 2FA đã nhập",
+        "history.note": "Tự lưu mã hợp lệ đã nhập trên trình duyệt máy này để tìm lại khi quên, copy nhầm hoặc sai sót. Bấm vào link để dùng lại. Xóa dữ liệu trang sẽ mất danh sách. URL chứa secret có thể được lưu trong lịch sử, đồng bộ trình duyệt và log máy chủ khi mở lại. Xóa tại đây không xóa lịch sử duyệt web hoặc danh sách tài khoản đã lưu.",
+        "history.clear": "Xóa tất cả lịch sử",
+        "history.empty": "Chưa có lịch sử mã 2FA.",
+        "history.delete": "Xóa mã này khỏi lịch sử",
+        "history.confirm": "Xóa toàn bộ lịch sử mã 2FA trên trình duyệt này?",
+
         docTitle: 'Tạo mã OTP từ 2FA',
         title: 'Nhập mã 2FA',
         'placeholder.secret': 'email|password|secret hoặc chỉ secret (qw6y x2dl...)',
@@ -1333,7 +1360,7 @@
         'empty.noMatch': 'Không có mã nào khớp tìm kiếm.',
         savedHeading: 'Danh sách đã lưu',
         'privacy.strong': 'Lưu ý:',
-        'privacy.body': 'danh sách mã 2FA được lưu cục bộ trên trình duyệt này (<code>localStorage</code>) và mã OTP được tạo ngay trên máy bạn. Website không gửi secret 2FA hay tên tài khoản lên server của chúng tôi. Xóa dữ liệu/cache hoặc cài lại trình duyệt có thể làm mất danh sách. Mã nguồn mở các bạn có thể kiểm tra code để yên tâm sử dụng: <a href="https://github.com/BinLate/2fa" target="_blank" rel="noopener noreferrer">GitHub</a>',
+        'privacy.body': 'danh sách mã 2FA được lưu cục bộ trên trình duyệt này (<code>localStorage</code>) và mã OTP được tạo ngay trên máy bạn. Danh sách không tự gửi lên server; mở URL chứa secret có thể ghi secret vào log máy chủ. Xóa dữ liệu trang hoặc cài lại trình duyệt có thể làm mất danh sách. Mã nguồn mở: <a href="https://github.com/BinLate/2fa" target="_blank" rel="noopener noreferrer">GitHub</a>',
         'help.title': 'Hướng dẫn nhanh',
         'help.1': 'Secret 2FA là khóa Base32 (A–Z, 2–7) dùng để tạo mã OTP 6 số tại máy bạn.',
         'help.2': 'Dán secret, hoặc cả dòng <code>email|password|secret</code> (tab hoặc dấu phẩy cũng được). Thêm mã đơn ở cuối vẫn nhận. Dấu <code>-</code> trong secret chỉ để dễ đọc, không dùng để tách cột.',
@@ -1364,6 +1391,13 @@
         'error.generate': 'Lỗi khi tạo OTP: {error}'
       },
       en: {
+        "history.heading": "Previously entered 2FA secrets",
+        "history.note": "Valid secrets are saved in this browser on this device so you can recover forgotten or incorrectly copied entries. Select a link to reuse it. Clearing site data removes this list. URLs contain secrets and may appear in browser history, browser sync and server logs when reopened. Deleting here does not remove browser history or saved accounts.",
+        "history.clear": "Clear all history",
+        "history.empty": "No 2FA history yet.",
+        "history.delete": "Remove this secret from history",
+        "history.confirm": "Clear all 2FA history in this browser?",
+
         docTitle: 'Generate OTP from 2FA',
         title: 'Enter 2FA secret',
         'placeholder.secret': 'email|password|secret or secret only (qw6y x2dl...)',
@@ -1395,7 +1429,7 @@
         'empty.noMatch': 'No codes match the search.',
         savedHeading: 'Saved accounts',
         'privacy.strong': 'Note:',
-        'privacy.body': 'Saved 2FA accounts stay in this browser (<code>localStorage</code>). OTP codes are generated on your device. This site does not upload your 2FA secrets or account names to our server. Clearing site data/cache or reinstalling the browser can delete the list. Open source — you can review the code here: <a href="https://github.com/BinLate/2fa" target="_blank" rel="noopener noreferrer">GitHub</a>.',
+        'privacy.body': 'Saved 2FA accounts stay in this browser (<code>localStorage</code>). OTP codes are generated on your device. The list is not automatically uploaded. Opening a URL containing a secret may record it in server logs. Clearing site data/cache or reinstalling the browser can delete the list. Open source — you can review the code here: <a href="https://github.com/BinLate/2fa" target="_blank" rel="noopener noreferrer">GitHub</a>.',
         'help.title': 'Quick guide',
         'help.1': 'A 2FA secret is a Base32 key (A–Z, 2–7) used to generate a 6-digit OTP on your device.',
         'help.2': 'Paste the secret, or a full line <code>email|password|secret</code> (tab or comma also work). Extra fields at the end are ignored. A hyphen <code>-</code> inside the secret is only grouping, not a column separator.',
@@ -1492,6 +1526,7 @@
       localStorage.setItem(LANG_KEY, currentLang);
       applyTranslations();
       renderSavedSecrets();
+      renderInputHistory();
     }
 
     function toggleLanguage() {
@@ -1933,6 +1968,102 @@
       applyTheme(nextTheme);
     }
 
+
+    const INPUT_HISTORY_KEY = 'twofa.inputHistory.v1';
+    let inputHistory = [];
+    let inputHistoryTimer;
+
+    function loadInputHistory() {
+      try {
+        const data = JSON.parse(localStorage.getItem(INPUT_HISTORY_KEY) || '[]');
+        inputHistory = Array.isArray(data) ? [...new Set(data.filter(secret => typeof secret === 'string' && secret.length >= 8 && /^[A-Z2-7]+$/.test(secret)))] : [];
+      } catch (_) { inputHistory = []; }
+      renderInputHistory();
+    }
+
+    function persistInputHistory() {
+      try {
+        localStorage.setItem(INPUT_HISTORY_KEY, JSON.stringify(inputHistory));
+        return true;
+      } catch (_) { setErrorMessage(t('error.saveStorage')); return false; }
+    }
+
+    function renderInputHistory() {
+      const list = document.getElementById('input-history');
+      list.replaceChildren();
+      if (!inputHistory.length) {
+        const empty = document.createElement('li');
+        empty.className = 'empty-list';
+        empty.textContent = t('history.empty');
+        list.appendChild(empty);
+      }
+      inputHistory.forEach(secret => {
+        const row = document.createElement('li');
+        row.className = 'history-row';
+        const link = document.createElement('a');
+        link.className = 'history-link';
+        link.href = '/' + encodeURIComponent(secret);
+        link.textContent = location.host + '/' + secret;
+        link.addEventListener('click', event => {
+          if (event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          document.getElementById('secret').value = secret;
+          document.getElementById('account-name').value = '';
+          generateOTP();
+        });
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'history-delete';
+        remove.setAttribute('aria-label', t('history.delete'));
+        remove.title = t('history.delete');
+        remove.innerHTML = '<i class="fa-solid fa-xmark" aria-hidden="true"></i>';
+        remove.addEventListener('click', () => {
+          clearTimeout(inputHistoryTimer);
+          const previous = inputHistory;
+          inputHistory = inputHistory.filter(value => value !== secret);
+          if (!persistInputHistory()) inputHistory = previous;
+          renderInputHistory();
+        });
+        row.append(link, remove);
+        list.appendChild(row);
+      });
+      document.getElementById('clear-history').hidden = !inputHistory.length;
+    }
+
+    function clearInputHistory() {
+      if (!window.confirm(t('history.confirm'))) return;
+      clearTimeout(inputHistoryTimer);
+      const previous = inputHistory;
+      inputHistory = [];
+      if (!persistInputHistory()) inputHistory = previous;
+      renderInputHistory();
+    }
+
+    function recordInputHistory(secret) {
+      clearTimeout(inputHistoryTimer);
+      inputHistoryTimer = setTimeout(() => {
+        if (cleanSecret(document.getElementById('secret').value) !== secret) return;
+        const previous = inputHistory;
+        inputHistory = [secret, ...inputHistory.filter(value => value !== secret)];
+        if (!persistInputHistory()) inputHistory = previous;
+        renderInputHistory();
+        if (location.protocol !== 'file:' && location.pathname !== '/' + secret) {
+          try { history.pushState(null, '', '/' + secret); } catch (_) { /* Local list still works. */ }
+        }
+      }, 600);
+    }
+
+    window.addEventListener('popstate', () => {
+      clearTimeout(inputHistoryTimer);
+      if (!parseSecretFromUrl()) {
+        document.getElementById('secret').value = '';
+        handleSecretInput();
+      }
+    });
+    window.addEventListener('storage', event => {
+      if (event.key === INPUT_HISTORY_KEY || event.key === null) loadInputHistory();
+    });
+
     function loadSavedSecretsFromStorage() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
@@ -2195,6 +2326,7 @@
       generateWindow(currentSecret).then(function (win) {
         applyOtpWindow(win);
         startCountdown();
+        recordInputHistory(cleanSecretInput);
         if (options.copyAfter) copyOTP();
       }).catch(function (error) {
         setErrorMessage(t('error.generate', { error: error.message }));
@@ -2341,6 +2473,7 @@
       setupHelpDialog();
       setupKeyboardShortcuts();
       loadSavedSecretsFromStorage();
+      loadInputHistory();
       if (parseSecretFromUrl()) return;
       setTimeout(autoPasteOnLoad, 500);
     });
@@ -2367,6 +2500,7 @@
     function handleSecretInput() {
       const secretInputEl = document.getElementById('secret');
       if (!secretInputEl) return;
+      clearTimeout(inputHistoryTimer);
       const rawSecretInput = secretInputEl.value;
       if (isMixedOrUri(rawSecretInput)) return;
 
