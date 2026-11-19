@@ -2411,25 +2411,74 @@
       return await navigator.clipboard.readText();
     }
 
-    async function getClipboardReadPermissionState() {
-      try {
-        if (!navigator.permissions || !navigator.permissions.query) return 'unknown';
-        const result = await navigator.permissions.query({ name: 'clipboard-read' });
-        return result && result.state ? result.state : 'unknown';
-      } catch (_) {
-        return 'unknown';
-      }
-    }
-
     async function autoPasteOnLoad() {
-      const permissionState = await getClipboardReadPermissionState();
-      if (permissionState === 'denied') return;
-      try {
-        const text = await readClipboardTextSafely();
-        applyClipboardTextToSecret(text, 'Đã nhận secret từ clipboard.');
-      } catch (_) {
-        // Silent on load: many browsers block clipboard read before user gesture.
+      const input = document.getElementById('secret');
+      if (!input || input.value.trim() || !navigator.clipboard || !navigator.clipboard.readText) return;
+      let pending = true;
+      let reading = false;
+      let retryTimer;
+      let retries = 0;
+      let permission;
+
+      function stop() {
+        pending = false;
+        clearTimeout(retryTimer);
+        window.removeEventListener('focus', scheduleRead);
+        document.removeEventListener('visibilitychange', scheduleRead);
+        input.removeEventListener('input', stop);
+        input.removeEventListener('paste', stop);
+        if (permission) permission.removeEventListener('change', permissionChanged);
       }
+
+      function scheduleRead() {
+        if (!pending) return;
+        clearTimeout(retryTimer);
+        // The permission bubble can close before focus returns to the document.
+        retryTimer = setTimeout(attemptRead, 150);
+      }
+
+      function permissionChanged() {
+        if (permission.state === 'denied') stop();
+        else if (permission.state === 'granted') scheduleRead();
+      }
+
+      async function attemptRead() {
+        if (!pending || reading) return;
+        if (input.value.trim()) { stop(); return; }
+        if (document.hidden || !document.hasFocus()) return;
+        if (permission && permission.state === 'denied') { stop(); return; }
+        reading = true;
+        try {
+          const text = await readClipboardTextSafely();
+          if (!pending || input.value.trim()) { stop(); return; }
+          if (text.trim()) {
+            stop();
+            applyClipboardTextToSecret(text);
+          }
+        } catch (_) {
+          // Permission/focus may still be settling. Retry only after access is granted.
+        } finally {
+          reading = false;
+          if (pending && permission && permission.state === 'granted' && retries < 3) {
+            retries++;
+            scheduleRead();
+          }
+        }
+      }
+
+      window.addEventListener('focus', scheduleRead);
+      document.addEventListener('visibilitychange', scheduleRead);
+      input.addEventListener('input', stop);
+      input.addEventListener('paste', stop);
+      try {
+        if (navigator.permissions && navigator.permissions.query) {
+          permission = await navigator.permissions.query({ name: 'clipboard-read' });
+          if (pending) permission.addEventListener('change', permissionChanged);
+        }
+      } catch (_) { /* Permission queries are not supported in every browser. */ }
+      if (!pending) return;
+      if (permission && permission.state === 'denied') { stop(); return; }
+      await attemptRead();
     }
 
     function applyClipboardTextToSecret(text) {
