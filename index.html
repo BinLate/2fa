@@ -1087,6 +1087,23 @@
     .history-link { flex: 1; min-width: 0; color: #1565c0; overflow-wrap: anywhere; padding: 8px 0; font-family: Consolas, monospace; font-size: 14px; }
     .history-delete { flex-shrink: 0; width: 44px; height: 44px; padding: 0; background: transparent; color: #b91c1c; box-shadow: none; }
     .history-clear { margin-top: 16px; background: #b91c1c; box-shadow: none; }
+    .history-copy-guide { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; color: #166534; font-weight: 700; }
+    .history-code-wrap { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+    .history-code { min-width: 136px; min-height: 44px; padding: 8px 12px; background: #ecfdf5; color: #166534; border: 1px solid #86bda0; box-shadow: none; font-family: Consolas, monospace; font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: .08em; }
+    .history-code:hover { background: #dcfce7; transform: none; box-shadow: none; }
+    .history-code:disabled { cursor: wait; opacity: .65; }
+    .history-time { min-width: 62px; font-size: 13px; color: #526173; font-variant-numeric: tabular-nums; }
+    .history-code-wrap.is-expiring .history-time { color: #92400e; font-weight: 700; }
+    body.theme-dark .history-copy-guide { color: #86efac; }
+    body.theme-dark .history-code { color: #bbf7d0; background: #15382a; border-color: #357859; }
+    body.theme-dark .history-code:hover { background: #1d4937; }
+    body.theme-dark .history-time { color: #cbd5e1; }
+    body.theme-dark .history-code-wrap.is-expiring .history-time { color: #fcd34d; }
+    @media (max-width: 600px) {
+      .history-row { flex-wrap: wrap; gap: 4px 12px; padding: 12px 0; }
+      .history-link { flex-basis: calc(100% - 56px); }
+      .history-code-wrap { order: 3; width: 100%; }
+    }
     .history-section :focus-visible { outline: 3px solid #2585cf; outline-offset: 3px; }
     body.theme-dark .history-note { color: #cbd5e1; }
     body.theme-dark .history-link { color: #93c5fd; }
@@ -1219,9 +1236,9 @@
 
   <section class="container history-section" aria-labelledby="history-heading">
     <h3 id="history-heading" data-i18n="history.heading">Lịch sử mã 2FA đã nhập</h3>
-    <p class="history-note" data-i18n="history.note"></p>
+    <p class="history-note"><span data-i18n="history.note"></span><br><strong class="history-copy-guide"><i class="fa-regular fa-copy" aria-hidden="true"></i><span data-i18n="history.copyGuide"></span></strong></p>
     <ul id="input-history" class="history-list"></ul>
-    <button id="clear-history" type="button" class="danger-btn history-clear" onclick="clearInputHistory()" data-i18n="history.clear">Xóa tất cả lịch sử</button>
+    <button id="clear-history" type="button" class="danger-btn history-clear" onclick="clearInputHistory()" data-i18n="history.clear">Xóa tất cả</button>
   </section>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -1323,7 +1340,10 @@
     var I18N = {
       vi: {
         "history.heading": "Lịch sử mã 2FA đã nhập",
-        "history.note": "Tự lưu mã hợp lệ đã nhập trên trình duyệt máy này để tìm lại khi quên, copy nhầm hoặc sai sót. Bấm vào link để dùng lại. Xóa dữ liệu trang sẽ mất danh sách. URL chứa secret có thể được lưu trong lịch sử, đồng bộ trình duyệt và log máy chủ khi mở lại. Xóa tại đây không xóa lịch sử duyệt web hoặc danh sách tài khoản đã lưu.",
+        "history.copyGuide": "Nhấn vào mã OTP để copy",
+        "history.copyLabel": "Copy mã OTP của dòng này",
+        "history.failed": "Không tạo được mã",
+        "history.note": "Tự lưu mã hợp lệ đã nhập trên trình duyệt máy này để tìm lại khi quên, copy nhầm hoặc sai sót. Mỗi dòng hiển thị mã OTP hiện tại và thời gian còn lại; mã tự cập nhật khi hết hạn.",
         "history.clear": "Xóa tất cả lịch sử",
         "history.empty": "Chưa có lịch sử mã 2FA.",
         "history.delete": "Xóa mã này khỏi lịch sử",
@@ -1392,7 +1412,10 @@
       },
       en: {
         "history.heading": "Previously entered 2FA secrets",
-        "history.note": "Valid secrets are saved in this browser on this device so you can recover forgotten or incorrectly copied entries. Select a link to reuse it. Clearing site data removes this list. URLs contain secrets and may appear in browser history, browser sync and server logs when reopened. Deleting here does not remove browser history or saved accounts.",
+        "history.copyGuide": "Click an OTP code to copy",
+        "history.copyLabel": "Copy this entry’s OTP code",
+        "history.failed": "Could not generate code",
+        "history.note": "Valid secrets are saved in this browser on this device so you can recover forgotten or incorrectly copied entries. Each entry shows its current OTP and remaining time; codes refresh automatically when they expire. Select a link to reuse its secret. Clearing site data removes this list. URLs contain secrets and may appear in browser history, browser sync and server logs when reopened. Deleting here does not remove browser history or saved accounts.",
         "history.clear": "Clear all history",
         "history.empty": "No 2FA history yet.",
         "history.delete": "Remove this secret from history",
@@ -1972,6 +1995,30 @@
     const INPUT_HISTORY_KEY = 'twofa.inputHistory.v1';
     let inputHistory = [];
     let inputHistoryTimer;
+    let historyOtpInterval;
+
+    function updateHistoryOtps() {
+      const slot = getCurrentTimeSlot();
+      const seconds = getTimeRemaining();
+      document.querySelectorAll('.history-code-wrap').forEach(wrap => {
+        const button = wrap.querySelector('button');
+        wrap.querySelector('.history-time').textContent = t('countdown', { seconds });
+        wrap.classList.toggle('is-expiring', seconds <= NEAR_EXPIRY_SECONDS);
+        if (button.dataset.slot === String(slot)) return;
+        button.dataset.slot = String(slot);
+        button.disabled = true;
+        button.textContent = '— — —';
+        otplib.authenticator.generateAtCounter(wrap.dataset.secret, slot).then(code => {
+          if (!button.isConnected || button.dataset.slot !== String(slot)) return;
+          button.textContent = code.slice(0, 3) + ' ' + code.slice(3);
+          button.disabled = false;
+        }).catch(() => {
+          if (!button.isConnected || button.dataset.slot !== String(slot)) return;
+          button.textContent = '— — —';
+          button.title = t('history.failed');
+        });
+      });
+    }
 
     function loadInputHistory() {
       try {
@@ -1989,6 +2036,7 @@
     }
 
     function renderInputHistory() {
+      clearInterval(historyOtpInterval);
       const list = document.getElementById('input-history');
       list.replaceChildren();
       if (!inputHistory.length) {
@@ -2024,10 +2072,32 @@
           if (!persistInputHistory()) inputHistory = previous;
           renderInputHistory();
         });
-        row.append(link, remove);
+        const codeWrap = document.createElement('div');
+        codeWrap.className = 'history-code-wrap';
+        codeWrap.dataset.secret = secret;
+        const codeButton = document.createElement('button');
+        codeButton.type = 'button';
+        codeButton.className = 'history-code';
+        codeButton.setAttribute('aria-label', t('history.copyLabel'));
+        codeButton.title = t('history.copyGuide');
+        codeButton.textContent = '— — —';
+        codeButton.disabled = true;
+        codeButton.addEventListener('click', async () => {
+          // Generate again at click time so a period rollover never copies stale digits.
+          try {
+            const code = await otplib.authenticator.generateAtCounter(secret, getCurrentTimeSlot());
+            copyPlainText(code, () => showToast(t('copiedHint')), () => setErrorMessage(t('error.clipboard')));
+          } catch (_) { setErrorMessage(t('history.failed')); }
+        });
+        const time = document.createElement('span');
+        time.className = 'history-time';
+        codeWrap.append(codeButton, time);
+        row.append(link, codeWrap, remove);
         list.appendChild(row);
       });
       document.getElementById('clear-history').hidden = !inputHistory.length;
+      updateHistoryOtps();
+      if (inputHistory.length) historyOtpInterval = setInterval(updateHistoryOtps, 1000);
     }
 
     function clearInputHistory() {
